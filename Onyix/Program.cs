@@ -8,7 +8,11 @@ namespace Onyix
 	public class Program
 	{
 		private static readonly Logger logs = LogManager.GetCurrentClassLogger();
+#if DEBUG
+		private static readonly Configuration config = Configuration.Load(HardVars.DebugConfigPath);
+#else
 		private static readonly Configuration config = Configuration.Load(HardVars.ConfigPath);
+#endif
 
 		public static Task Main(string[] args)
 		{

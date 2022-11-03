@@ -13,6 +13,7 @@
 		 */
 
 		public const string ConfigPath = "Data/Configuration.config";
+		public const string DebugConfigPath = "Data/Debug.config";
 		public const string NLogConfigPath = "Data/NLog.config";
 		public const string DBPath = "Data/Database.db";
 	}
