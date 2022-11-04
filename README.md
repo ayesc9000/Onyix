@@ -19,13 +19,3 @@ dotnet user-secrets set "GUILD" "1234567890"
 ```
 
 **Important: This is for the development environment only. The token is set through the `TOKEN` environment variable in production.**
-
-## To-Do
-
-- [x] Functioning client
-
-- [x] Working slash commands
-
-- [ ] Rewrite database
-
-- [ ] Cleanup
