@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Onyix": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
