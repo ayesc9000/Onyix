@@ -1,9 +1,7 @@
-﻿namespace Onyix.Models
+﻿namespace Onyix.Entities
 {
 	public class UserKarma
 	{
-		// TODO: DB rewrite.
-
 		public ulong UserId { get; set; }
 		public ulong GuildId { get; set; }
 		public long Upvotes { get; set; }

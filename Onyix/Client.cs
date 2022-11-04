@@ -10,6 +10,7 @@ namespace Onyix
 	{
 		private readonly DiscordSocketClient client;
 		private readonly Interactions interactions;
+		private readonly Database database;
 
 		/// <summary>
 		/// Create a new client
@@ -23,6 +24,7 @@ namespace Onyix
 			client.SlashCommandExecuted += SlashCommandExecuted;
 
 			interactions = new();
+			database = new();
 		}
 
 		/// <summary>
@@ -89,27 +91,27 @@ namespace Onyix
 			switch (message.Severity)
 			{
 				case LogSeverity.Verbose:
-					Program.Logs.Debug(exception: message.Exception, "{0}: {1}", message.Source, message.Message);
+					Program.Logs.Debug(message.Exception, "{0}: {1}", message.Source, message.Message);
 					break;
 
 				case LogSeverity.Debug:
-					Program.Logs.Debug(exception: message.Exception, "{0}: {1}", message.Source, message.Message);
+					Program.Logs.Debug(message.Exception, "{0}: {1}", message.Source, message.Message);
 					break;
 
 				case LogSeverity.Info:
-					Program.Logs.Info(exception: message.Exception, "{0}: {1}", message.Source, message.Message);
+					Program.Logs.Info(message.Exception, "{0}: {1}", message.Source, message.Message);
 					break;
 
 				case LogSeverity.Warning:
-					Program.Logs.Warn(exception: message.Exception, "{0}: {1}", message.Source, message.Message);
+					Program.Logs.Warn(message.Exception, "{0}: {1}", message.Source, message.Message);
 					break;
 
 				case LogSeverity.Error:
-					Program.Logs.Error(exception: message.Exception, "{0}: {1}", message.Source, message.Message);
+					Program.Logs.Error(message.Exception, "{0}: {1}", message.Source, message.Message);
 					break;
 
 				case LogSeverity.Critical:
-					Program.Logs.Fatal(exception: message.Exception, "{0}: {1}", message.Source, message.Message);
+					Program.Logs.Fatal(message.Exception, "{0}: {1}", message.Source, message.Message);
 					break;
 			}
 		}
@@ -120,6 +122,14 @@ namespace Onyix
 		public DiscordSocketClient DiscordClient
 		{
 			get => client;
+		}
+
+		/// <summary>
+		/// Returns the active database
+		/// </summary>
+		public Database Database
+		{
+			get => database;
 		}
 	}
 }

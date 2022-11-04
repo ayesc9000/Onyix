@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace Onyix.Models
+namespace Onyix.Entities
 {
 	public class UserLevel
 	{
-		// TODO: DB rewrite.
-
 		public ulong UserId { get; set; }
 		public ulong GuildId { get; set; }
 		public long XP { get; set; }

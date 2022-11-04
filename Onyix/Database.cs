@@ -1,153 +1,72 @@
-﻿using Discord;
+﻿using LiteDB;
+using Onyix.Entities;
 using System;
-using System.Linq;
-using System.Timers;
 
 namespace Onyix
 {
-	public static class Database
+	public class Database
 	{
-		// TODO: Complete database rewrite.
-
-		/*private static readonly DatabaseContext dbcontext = new();
-		private static readonly Timer savetimer = new();
+		private readonly LiteDatabase database;
 
 		/// <summary>
-		/// Get the active database context
+		/// Create a new LiteDB instance
 		/// </summary>
-		public static DatabaseContext DatabaseContext
+		public Database()
 		{
-			get { return dbcontext; }
+			database = new(Paths.Database);
+
+			// Make sure collections exist
+			_ = database.GetCollection<LevelSettings>("levelsettings");
+			_ = database.GetCollection<UserKarma>("userkarma");
+			_ = database.GetCollection<UserLevel>("userlevel");
 		}
 
 		/// <summary>
-		/// Ensure the database is ready to begin sending and receiving data
+		/// Start a new transaction on the database
 		/// </summary>
-		public static void StartDatabase()
+		/// <remarks>There can only be one active transaction per thread</remarks>
+		/// <typeparam name="T">Entity class type</typeparam>
+		/// <param name="name">Name of collection</param>
+		/// <returns>Found collection</returns>
+		/// <exception cref="Exception">Missing collection or failed to start transaction</exception>
+		public ILiteCollection<T> StartTransaction<T>(string name)
 		{
-			// Create database if it does not exist
-			Logger.WriteLog(LogSeverity.Info, "Database", "Starting database...");
-			dbcontext.Database.EnsureCreated();
-
-			// Apply migrations
-			Logger.WriteLog(LogSeverity.Info, "Database", "Migrating changes...");
-			dbcontext.Database.Migrate();
-
-			// Start save timer
-			savetimer.Interval = Config.Data.SaveInterval;
-			savetimer.Elapsed += TimerElapsed;
-			savetimer.Start();
-
-			Logger.WriteLog(LogSeverity.Info, "Database", "Database is ready!");
-		}
-
-		/// <summary>
-		/// Event handler for when the save interval timer is elapsed
-		/// </summary>
-		/// <param name="sender">The sender of this event</param>
-		/// <param name="e">The parameters of this event</param>
-		private static void TimerElapsed(object? sender, ElapsedEventArgs e)
-		{
-			Save();
-		}
-
-		/// <summary>
-		/// Save the database
-		/// </summary>
-		public static void Save()
-		{
-			if (dbcontext.ChangeTracker.HasChanges())
+			// Check collection
+			if (!database.CollectionExists(name))
 			{
-				dbcontext.SaveChanges();
-				Logger.WriteLog(LogSeverity.Verbose, "Database", "Changes have been saved.");
-			}
-		}
-
-		/// <summary>
-		/// Get an item from the LevelSettings table or create it if it doesn't exist
-		/// </summary>
-		/// <param name="guildId">The Id of the guild</param>
-		/// <returns>The found item or a new one if it does not exist</returns>
-		public static LevelSettings GetLevelSettings(ulong guildId)
-		{
-			// Get item
-			LevelSettings? result = dbcontext.LevelSettings.Find(guildId);
-
-			// Check if it exists
-			if (result == null)
-			{			
-				// Create it if it does not
-				result = new LevelSettings()
-				{
-					GuildId = guildId
-				};
-
-				dbcontext.LevelSettings.Add(result);
+				throw new Exception("This collection does not exist");
 			}
 
-			// Return item
-			return result;
-		}
-
-		/// <summary>
-		/// Get an item from the UserKarma table or create it if it doesn't exist
-		/// </summary>
-		/// <param name="userId">The Id of the user</param>
-		/// <param name="guildId">The Id of the guild</param>
-		/// <returns>The found item or a new one if it does not exist</returns>
-		public static UserKarma GetUserKarma(ulong userId, ulong guildId)
-		{
-			// Get item
-			UserKarma? result = dbcontext.UserKarma
-				.Where(x => x.UserId == userId && x.GuildId == guildId)
-				.FirstOrDefault();
-
-			
-			// Check if it exists
-			if (result == null)
+			// Start transaction
+			if (!database.BeginTrans())
 			{
-				// Create item if it does not exist
-				result = new UserKarma()
-				{
-					UserId = userId,
-					GuildId = guildId
-				};
-
-				dbcontext.UserKarma.Add(result);
+				// TODO: Not sure whether to throw exception or return null in this state.
+				// An exception will do for now. Fix this later.
+				throw new Exception("Failed to start database transaction.");
 			}
 
-			// Return item
-			return result;
+			Program.Logs.Info("Started database transaction with collection {0}", name);
+			return database.GetCollection<T>(name);
 		}
 
 		/// <summary>
-		/// Get an item from the UserLevel table or create it if it doesn't exist
+		/// End an active database transaction
 		/// </summary>
-		/// <param name="userId">The Id of the user</param>
-		/// <param name="guildId">The Id of the guild</param>
-		/// <returns>The found item or a new one if it does not exist</returns>
-		public static UserLevel GetUserLevel(ulong userId, ulong guildId)
+		public void EndTransaction()
 		{
-			// Get item
-			UserLevel? result = dbcontext.UserLevel
-				.Where(x => x.UserId == userId && x.GuildId == guildId)
-				.FirstOrDefault();
-
-			// Check if it exists
-			if (result == null)
+			// End transaction
+			try
 			{
-				// Create it if it does not
-				result = new UserLevel()
+				if (!database.Commit())
 				{
-					UserId = userId,
-					GuildId = guildId
-				};
-
-				dbcontext.UserLevel.Add(result);
+					throw new Exception("Commit returned false");
+				}
 			}
-
-			// Return item
-			return result;
-		}*/
+			catch (Exception e)
+			{
+				database.Rollback();
+				Program.Logs.Error(e, "Failed to commit database transaction!");
+			}
+		}
 	}
 }

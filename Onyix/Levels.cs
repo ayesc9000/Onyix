@@ -53,7 +53,7 @@ namespace Onyix
 
 		public static double GetMultiplier(long level, double multipler)
 		{
-			return 1.0 + (level * multipler);
+			return 1.0 + (level * (multipler / 10));
 		}
 	}
 }

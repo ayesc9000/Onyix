@@ -17,7 +17,7 @@ namespace Onyix
 		/// <param name="args">Command-line arguments</param>
 		public static Task Main(string[] args)
 		{
-			LogManager.Configuration = new XmlLoggingConfiguration(HardVars.NLogConfigPath);
+			LogManager.Configuration = new XmlLoggingConfiguration(Paths.NLog);
 			Logs.Info("Onyix version " + Version);
 
 #if DEBUG
