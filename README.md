@@ -22,9 +22,9 @@ dotnet user-secrets set "GUILD" "1234567890"
 
 ## To-Do
 
-- [ ] Functioning client
+- [x] Functioning client
 
-- [ ] Working slash commands
+- [x] Working slash commands
 
 - [ ] Rewrite database
 
