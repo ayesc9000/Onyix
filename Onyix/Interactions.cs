@@ -9,7 +9,7 @@ namespace Onyix
 {
 	public class Interactions
 	{
-		private readonly Dictionary<string, Func<DiscordSocketClient, SocketSlashCommand, Task>> executers;
+		private readonly Dictionary<string, Func<Client, SocketSlashCommand, Task>> executers;
 
 		/// <summary>
 		/// Create a new command manager
@@ -23,7 +23,7 @@ namespace Onyix
 		/// Execute a slash command, if it exists
 		/// </summary>
 		/// <param name="command">Slash command object</param>
-		public async Task ExecuteCommand(DiscordSocketClient client, SocketSlashCommand command)
+		public async Task ExecuteCommand(Client client, SocketSlashCommand command)
 		{
 			// Get command executer
 			var executer = executers[command.Data.Name];

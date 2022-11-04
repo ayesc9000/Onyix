@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Onyix.Entities;
 using System;
 using System.Threading.Tasks;
 
@@ -7,13 +8,11 @@ namespace Onyix
 {
 	public static class Levels
 	{
-		public static async Task GiveXPAsync(SocketCommandContext context)
+		public static async Task GiveXPAsync(Client client, SocketCommandContext context)
 		{
-			// TODO: This code relies on old database logic. It will need to be updated.
-
 			// Get the user and server data
-			/*UserLevel? user = Database.GetUserLevel(context.Message.Author.Id, context.Guild.Id);
-			LevelSettings? settings = Database.GetLevelSettings(context.Guild.Id);
+			UserLevel user = client.Database.GetUserLevel(context.Message.Author.Id, context.Guild.Id);
+			LevelSettings settings = client.Database.GetLevelSettings(context.Guild.Id);
 
 			// Check if we can give XP right now
 			if (!(DateTime.Now - user.LastGain >= TimeSpan.FromSeconds(settings.Cooldown)))
@@ -48,7 +47,7 @@ namespace Onyix
 				}; 
 
 				await context.Message.ReplyAsync("", false, embed.Build());
-			}*/
+			}
 		}
 
 		public static double GetMultiplier(long level, double multipler)

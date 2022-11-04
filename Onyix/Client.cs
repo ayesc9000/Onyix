@@ -59,9 +59,7 @@ namespace Onyix
 			}
 
 			// Get socket user message
-			SocketUserMessage? message = param as SocketUserMessage;
-
-			if (message == null)
+			if (param is not SocketUserMessage message)
 			{
 				return;
 			}
@@ -70,7 +68,7 @@ namespace Onyix
 			var context = new SocketCommandContext(client, message);
 
 			// Check levels
-			await Levels.GiveXPAsync(context);
+			await Levels.GiveXPAsync(this, context);
 		}
 
 		/// <summary>
@@ -79,7 +77,14 @@ namespace Onyix
 		/// <param name="command">Slash command details</param>
 		private async Task SlashCommandExecuted(SocketSlashCommand command)
 		{
-			await interactions.ExecuteCommand(client, command);
+			try
+			{
+				await interactions.ExecuteCommand(this, command);
+			}
+			catch
+			{
+				await command.RespondAsync("An internal exception occured while running this command. Try again later.");
+			}
 		}
 
 		/// <summary>

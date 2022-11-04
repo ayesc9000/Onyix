@@ -1,14 +1,13 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Onyix.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Onyix.Commands
 {
-	// Due to database nonsense, this command is broken for now.
-
-	/*public class Level : ICommand
+	public class Level : ICommand
 	{
 		public string Name
 		{
@@ -39,23 +38,19 @@ namespace Onyix.Commands
 			get => false;
 		}
 		
-		public async Task Execute(SocketSlashCommand command)
+		public async Task Execute(Client client, SocketSlashCommand command)
 		{
-			// Check if a specific user was specified
-			IUser target;
-
-			if (command.Data.Options.Count > 0)
+			// Check if a user was specified
+			// TODO: Check if a null value case is actually possible here
+			IUser target = command.Data.Options.Count switch
 			{
-				target = command.Data.Options.ElementAt(0).Value as IUser;
-			}
-			else
-			{
-				target = command.User;
-			}
+				0 => command.User,
+				_ => command.Data.Options.ElementAt(0).Value as IUser
+			};
 
 			// Get user information
-			UserLevel? user = Database.GetUserLevel(target.Id, (ulong)command.GuildId);
-			LevelSettings? settings = Database.GetLevelSettings((ulong)command.GuildId);
+			UserLevel user = client.Database.GetUserLevel(target.Id, (ulong)command.GuildId);
+			LevelSettings settings = client.Database.GetLevelSettings((ulong)command.GuildId);
 
 			EmbedBuilder embed = new()
 			{
@@ -88,5 +83,5 @@ namespace Onyix.Commands
 
 			await command.RespondAsync(embed: embed.Build());
 		}
-	}*/
+	}
 }
