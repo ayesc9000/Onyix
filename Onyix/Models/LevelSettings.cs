@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Onyix.Models
+﻿namespace Onyix.Models
 {
 	public class LevelSettings
 	{
-		[Key]
+		// TODO: DB rewrite.
+
 		public ulong GuildId { get; set; }
 		public bool EnableLevels { get; set; }
 		public bool EnableLevelUpMessage { get; set; }

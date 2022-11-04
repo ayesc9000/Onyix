@@ -1,87 +1,87 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using System.Collections.Generic;
-using System;
 using System.Threading.Tasks;
-using NLog;
-using System.Reflection;
+using Discord.Commands;
+using System;
 
 namespace Onyix
 {
 	public class Client
 	{
 		private readonly DiscordSocketClient client;
-		private readonly Dictionary<string, Func<SocketSlashCommand, Task>> executers;
+		private readonly Interactions interactions;
 
+		/// <summary>
+		/// Create a new client
+		/// </summary>
 		public Client()
 		{
 			client = new();
-			executers = new();
-
 			client.Log += Log;
+			client.Ready += Ready;
+			client.MessageReceived += MessageReceived;
+			client.SlashCommandExecuted += SlashCommandExecuted;
 		}
 
+		/// <summary>
+		/// Connect the client to Discord
+		/// </summary>
 		public async Task Start()
 		{
-			//await client.LoginAsync(TokenType.Bot, "");
-			//await client.StartAsync();
+			await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("TOKEN"));
+			await client.StartAsync();
 			await Task.Delay(-1);
 		}
 
-		public ApplicationCommandProperties[] BuildCommands()
+		/// <summary>
+		/// Fired when the websocket is ready
+		/// </summary>
+		private async Task Ready()
 		{
-			List<ICommand> interfaces = GetCommandInterfaces();
-			List<ApplicationCommandProperties> props = new();
-
-			// Build each command
-			foreach (ICommand c in interfaces)
-			{
-				Program.Logs.Debug($"Discovered command: {c.Name}");
-
-				// Create the command builder
-				SlashCommandBuilder builder = new()
-				{
-					Name = c.Name,
-					Description = c.Description,
-					IsDMEnabled = c.UseInDMs,
-					Options = c.Options
-				};
-
-				// Add the built command to the properties list and executers dictionary
-				props.Add(builder.Build());
-				executers.Add(c.Name, c.Execute);
-			}
-
-			// Return application command properties as an array
-			return props.ToArray();
+			// Push commands
+			await interactions.PushCommands(client);
 		}
 
-		private List<ICommand> GetCommandInterfaces()
+		/// <summary>
+		/// Fired when a message is received
+		/// </summary>
+		/// <param name="param">Message details</param>
+		private async Task MessageReceived(SocketMessage param)
 		{
-			// Get executing assembly
-			Assembly asm = Assembly.GetExecutingAssembly();
-			List<ICommand> interfaces = new();
-
-			// Go through all types
-			foreach (Type type in asm.GetTypes())
+			// Check if author is a bot
+			if (param.Author.IsBot)
 			{
-				// Check if the type is assignable from ICommand
-				if (typeof(ICommand).IsAssignableFrom(type) && !type.IsInterface)
-				{
-					// Create a new instance of the type if it is
-					ICommand? command = Activator.CreateInstance(type) as ICommand;
-
-					// Make sure it is not null
-					if (command == null) continue;
-
-					interfaces.Add(command);
-				}
+				return;
 			}
 
-			// Return the found interfaces
-			return interfaces;
+			// Get socket user message
+			SocketUserMessage? message = param as SocketUserMessage;
+
+			if (message == null)
+			{
+				return;
+			}
+
+			// Create context
+			var context = new SocketCommandContext(client, message);
+
+			// Check levels
+			await Levels.GiveXPAsync(context);
 		}
 
+		/// <summary>
+		/// Fired when a slash command is used
+		/// </summary>
+		/// <param name="command">Slash command details</param>
+		private async Task SlashCommandExecuted(SocketSlashCommand command)
+		{
+			await interactions.ExecuteCommand(client, command);
+		}
+
+		/// <summary>
+		/// Generates a log message
+		/// </summary>
+		/// <param name="message">Log details</param>
 		private async Task Log(LogMessage message)
 		{
 			switch (message.Severity)
@@ -112,6 +112,9 @@ namespace Onyix
 			}
 		}
 
+		/// <summary>
+		/// Returns the Discord socket client
+		/// </summary>
 		public DiscordSocketClient DiscordClient
 		{
 			get => client;

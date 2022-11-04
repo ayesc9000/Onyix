@@ -1,13 +1,14 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Onyix.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Onyix.Commands
 {
-	public class Level : ICommand
+	// Due to database nonsense, this command is broken for now.
+
+	/*public class Level : ICommand
 	{
 		public string Name
 		{
@@ -87,5 +88,5 @@ namespace Onyix.Commands
 
 			await command.RespondAsync(embed: embed.Build());
 		}
-	}
+	}*/
 }

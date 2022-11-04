@@ -1,6 +1,4 @@
 ﻿using Discord;
-using Microsoft.EntityFrameworkCore;
-using Onyix.Models;
 using System;
 using System.Linq;
 using System.Timers;
@@ -9,7 +7,9 @@ namespace Onyix
 {
 	public static class Database
 	{
-		private static readonly DatabaseContext dbcontext = new();
+		// TODO: Complete database rewrite.
+
+		/*private static readonly DatabaseContext dbcontext = new();
 		private static readonly Timer savetimer = new();
 
 		/// <summary>
@@ -148,6 +148,6 @@ namespace Onyix
 
 			// Return item
 			return result;
-		}
+		}*/
 	}
 }

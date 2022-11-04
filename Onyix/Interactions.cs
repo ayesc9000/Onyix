@@ -9,21 +9,80 @@ namespace Onyix
 {
 	public class Interactions
 	{
-		public Dictionary<string, Func<SocketSlashCommand, Task>> Executers;
+		private readonly Dictionary<string, Func<DiscordSocketClient, SocketSlashCommand, Task>> executers;
 
 		/// <summary>
 		/// Create a new command manager
 		/// </summary>
 		public Interactions()
 		{
-			Executers = new();
+			executers = new();
 		}
 
 		/// <summary>
-		/// Load and build all slash commands
+		/// Execute a slash command, if it exists
 		/// </summary>
-		/// <returns>An array of all command properties</returns>
-		public ApplicationCommandProperties[] BuildCommands()
+		/// <param name="command">Slash command object</param>
+		public async Task ExecuteCommand(DiscordSocketClient client, SocketSlashCommand command)
+		{
+			// Get command executer
+			var executer = executers[command.Data.Name];
+
+			// Invoke executer if it is not null
+			if (executer != null)
+			{
+				await executer.Invoke(client, command);
+			}
+		}
+
+		/// <summary>
+		/// Push all slash commands to Discord.
+		/// <para>When debugging, commands will be pushed to the specified guild.</para>
+		/// <para>When releasing, commands will be pushed globally.</para>
+		/// </summary>
+		/// <param name="client">Discord client</param>
+		/// <exception cref="Exception">Invalid or missing guild information</exception>
+		public async Task PushCommands(DiscordSocketClient client)
+		{
+#if DEBUG
+			// Parse guild id from environment variable
+			ulong guildid;
+
+			try
+			{
+				guildid = ulong.Parse(Environment.GetEnvironmentVariable("GUILD"));
+			}
+			catch (Exception e)
+			{
+				throw new Exception("Invalid format for Guild ID", e);
+			}
+
+			Program.Logs.Info($"Pushing commands to {guildid}");
+
+			// Get guild and push commands
+			SocketGuild guild = client.GetGuild(guildid);
+
+			// Write commands if guild is not null
+			if (guild != null)
+			{
+				ApplicationCommandProperties[] properties = BuildCommands();
+				await guild.BulkOverwriteApplicationCommandAsync(properties);
+			}
+			else
+			{
+				throw new Exception("Provided guild does not exist");
+			}
+#else
+			Program.Logs.Info("Pushing commands system-wide");
+			// TODO: Implement system-wide command push
+#endif
+		}
+
+		/// <summary>
+		/// Builds an array of application command properties for each slash command class
+		/// </summary>
+		/// <returns>An array of ApplicationCommandProperties</returns>
+		private ApplicationCommandProperties[] BuildCommands()
 		{
 			List<ICommand> interfaces = GetCommandInterfaces();
 			List<ApplicationCommandProperties> props = new();
@@ -31,7 +90,7 @@ namespace Onyix
 			// Build each command
 			foreach (ICommand c in interfaces)
 			{
-				Logger.WriteLog(LogSeverity.Verbose, "CommandManager", $"Discovered command: {c.Name}");
+				Program.Logs.Debug($"Discovered command: {c.Name}");
 
 				// Create the command builder
 				SlashCommandBuilder builder = new()
@@ -44,7 +103,7 @@ namespace Onyix
 
 				// Add the built command to the properties list and executers dictionary
 				props.Add(builder.Build());
-				Executers.Add(c.Name, c.Execute);
+				executers.Add(c.Name, c.Execute);
 			}
 
 			// Return application command properties as an array
@@ -52,11 +111,10 @@ namespace Onyix
 		}
 
 		/// <summary>
-		/// Get all the interfaces found within the currently executing assembly that
-		/// are assignable from ICommand
+		/// Use reflection to find all classes implementing ICommand
 		/// </summary>
-		/// <returns>A list of all found interfaces</returns>
-		private static List<ICommand> GetCommandInterfaces()
+		/// <returns>List of all applicable classes</returns>
+		private List<ICommand> GetCommandInterfaces()
 		{
 			// Get executing assembly
 			Assembly asm = Assembly.GetExecutingAssembly();
@@ -72,10 +130,9 @@ namespace Onyix
 					ICommand? command = Activator.CreateInstance(type) as ICommand;
 
 					// Make sure it is not null
-					if (command != null)
-					{
-						interfaces.Add(command);
-					}
+					if (command == null) continue;
+
+					interfaces.Add(command);
 				}
 			}
 

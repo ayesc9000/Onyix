@@ -27,13 +27,13 @@ namespace Onyix.Commands
 			get => true;
 		}
 
-		public async Task Execute(SocketSlashCommand command)
+		public async Task Execute(DiscordSocketClient client, SocketSlashCommand command)
 		{
 			EmbedBuilder embed = new()
 			{
 				Title = "About Onyix",
 				Description = "Onyix is a Discord bot that provides a variety of useful commands and functions for the server.",
-				ThumbnailUrl = Program.Client.CurrentUser.GetAvatarUrl(),
+				ThumbnailUrl = client.CurrentUser.GetAvatarUrl(),
 				Color = new Color(0x26C95A)
 			};
 

@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Onyix.Models
+﻿namespace Onyix.Models
 {
 	public class UserKarma
 	{
-		[Key]
+		// TODO: DB rewrite.
+
 		public ulong UserId { get; set; }
 		public ulong GuildId { get; set; }
 		public long Upvotes { get; set; }

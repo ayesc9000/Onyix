@@ -50,11 +50,11 @@ namespace Onyix.Commands
 			get => false;
 		}
 		
-		public async Task Execute(SocketSlashCommand command)
+		public async Task Execute(DiscordSocketClient client, SocketSlashCommand command)
 		{
 			// Get command parameters
 			long mode = (long)command.Data.Options.ElementAt(0).Value;
-			var channel = command.Channel as SocketTextChannel;
+			SocketTextChannel? channel = command.Channel as SocketTextChannel;
 
 			// Check if channel is null
 			if (channel == null)

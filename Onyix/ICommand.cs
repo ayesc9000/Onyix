@@ -45,6 +45,6 @@ namespace Onyix
 		/// <summary>
 		/// The executer method that is ran when the command is used
 		/// </summary>
-		public Task Execute(SocketSlashCommand command);
+		public Task Execute(DiscordSocketClient client, SocketSlashCommand command);
 	}
 }

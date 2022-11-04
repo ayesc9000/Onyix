@@ -1,11 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Onyix.Models
 {
 	public class UserLevel
 	{
-		[Key]
+		// TODO: DB rewrite.
+
 		public ulong UserId { get; set; }
 		public ulong GuildId { get; set; }
 		public long XP { get; set; }
