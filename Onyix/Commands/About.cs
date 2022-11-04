@@ -32,7 +32,7 @@ namespace Onyix.Commands
 			EmbedBuilder embed = new()
 			{
 				Title = "About Onyix",
-				Description = "Onyix is a Discord bot that provides a variety of useful commands and functions for the server.",
+				Description = "Onyix is a Discord bot that provides a variety of commands and tools for users and admins.",
 				ThumbnailUrl = client.CurrentUser.GetAvatarUrl(),
 				Color = new Color(0x26C95A)
 			};

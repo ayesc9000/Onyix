@@ -25,7 +25,7 @@ namespace Onyix.Commands
 				new SlashCommandOptionBuilder()
 				{
 					Name = "mode",
-					Description = "Wether to lock or unlock the channel",
+					Description = "Whether to lock or unlock the channel",
 					IsRequired = true,
 					Type = ApplicationCommandOptionType.Integer,
 					Choices = new()
