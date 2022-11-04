@@ -21,6 +21,8 @@ namespace Onyix
 			client.Ready += Ready;
 			client.MessageReceived += MessageReceived;
 			client.SlashCommandExecuted += SlashCommandExecuted;
+
+			interactions = new();
 		}
 
 		/// <summary>
