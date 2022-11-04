@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Onyix
 {
-	public class Program
+	public partial class Program
 	{
 		private static readonly Logger logs = LogManager.GetCurrentClassLogger();
 #if DEBUG
