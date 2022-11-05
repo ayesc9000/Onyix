@@ -45,8 +45,6 @@ Onyix comes pre-configured to support debugging within a Docker container for Wi
 
 Make sure Docker Desktop is already running in the background. In Visual Studio, open the Debug Target drop down, and select the Docker option. Begin debugging by either clicking the Start Debugging button, or by pressing F5.
 
----
-
 ### 3.2 Debugging within Docker on MacOS or Linux
 
 > Important: This feature has not been tested, as I am unable to test it properly myself. It has been included in the hopes that it will be useful to others who may need it. 
@@ -60,8 +58,6 @@ You can now begin debugging by opening a terminal in the same folder as the proj
 ```shell
 dotnet run --launch-profile Docker
 ```
-
----
 
 ### 3.3 Building a release image
 
