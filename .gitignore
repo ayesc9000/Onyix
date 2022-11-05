@@ -2,3 +2,5 @@
 **/Onyix/obj
 **/.vs
 *.user
+Onyix/Data/Database.db
+Onyix/Data/Database-log.db

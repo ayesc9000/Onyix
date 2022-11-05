@@ -1,10 +1,10 @@
 {
-  "profiles": {
-    "Onyix": {
-      "commandName": "Project"
-    },
-    "Docker": {
-      "commandName": "Docker"
+    "profiles": {
+        "Onyix": {
+            "commandName": "Project"
+        },
+        "Docker": {
+            "commandName": "Docker"
+        }
     }
-  }
 }
