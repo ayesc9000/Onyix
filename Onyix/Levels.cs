@@ -15,7 +15,7 @@ namespace Onyix
 			LevelSettings settings = client.Database.GetLevelSettings(context.Guild.Id);
 
 			// Check if we can give XP right now
-			if (!(DateTime.Now - user.LastGain >= TimeSpan.FromSeconds(settings.Cooldown)))
+			if (!((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown)))
 			{
 				// TODO: Turn this back on layter :D
 				//return;
@@ -33,21 +33,25 @@ namespace Onyix
 				user.Level++;
 
 				// Check if we can send level up message
-				if (!settings.EnableLevelUpMessage)
+				if (settings.EnableLevelUpMessage)
 				{
-					return;
-				}
-				
-				// Send level up message
-				EmbedBuilder embed = new()
-				{
-					Title = settings.LevelUpTitle,
-					Description = settings.LevelUpMessage,
-					Color = new Color(0x26C95A)
-				}; 
+					// Send level up message
+					EmbedBuilder embed = new()
+					{
+						Title = settings.LevelUpTitle,
+						Description = settings.LevelUpMessage,
+						Color = new Color(0x26C95A)
+					};
 
-				await context.Message.ReplyAsync("", false, embed.Build());
+					await context.Message.ReplyAsync("", false, embed.Build());
+				}
 			}
+
+			// Commit data to database
+			Program.Logs.Info("Updating levels");
+			client.Database.StartTransaction();
+			client.Database.SetUserLevel(user);
+			client.Database.CommitTransaction();
 		}
 
 		public static double GetMultiplier(long level, double multipler)

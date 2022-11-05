@@ -48,6 +48,20 @@ namespace Onyix.Commands
 				_ => command.Data.Options.ElementAt(0).Value as IUser
 			};
 
+			// Check if target user is a bot
+			if (target.IsBot)
+			{
+				EmbedBuilder error = new()
+				{
+					Title = $"Error",
+					Description = "Bots do not have levels",
+					Color = Color.Red
+				};
+
+				await command.RespondAsync(embed: error.Build());
+				return;
+			}
+
 			// Get user information
 			UserLevel user = client.Database.GetUserLevel(target.Id, (ulong)command.GuildId);
 			LevelSettings settings = client.Database.GetLevelSettings((ulong)command.GuildId);

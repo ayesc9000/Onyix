@@ -6,25 +6,32 @@ namespace Onyix
 {
 	public class Database
 	{
+		private long transcount;
 		private readonly LiteDatabase database;
+		private readonly ILiteCollection<LevelSettings> levelsettings;
+		private readonly ILiteCollection<UserKarma> userkarma;
+		private readonly ILiteCollection<UserLevel> userlevel;
 
 		/// <summary>
 		/// Create a new LiteDB instance
 		/// </summary>
 		public Database()
 		{
+			transcount = 0;
 			database = new(Paths.Database);
 
-			// Configure collections
-			ILiteCollection<LevelSettings> levelsettings = database.GetCollection<LevelSettings>("levelsettings");
-			levelsettings.EnsureIndex(x => x.GuildId);
+			// Get collections
+			levelsettings = database.GetCollection<LevelSettings>("levelsettings");
+			userkarma = database.GetCollection<UserKarma>("userkarma");
+			userlevel = database.GetCollection<UserLevel>("userlevel");
 
-			ILiteCollection<UserKarma> userkarma = database.GetCollection<UserKarma>("userkarma");
-			userkarma.EnsureIndex(x => x.UserId);
-
-			ILiteCollection<UserLevel> userlevel = database.GetCollection<UserLevel>("userlevel");
-			userlevel.EnsureIndex(x => x.UserId);
-			userlevel.EnsureIndex(x => x.GuildId);
+			// Configure indexes
+			StartTransaction();
+			levelsettings.EnsureIndex(x => x.GuildId, true);
+			userkarma.EnsureIndex(x => x.UserId, true);
+			userlevel.EnsureIndex(x => x.UserId, true);
+			userlevel.EnsureIndex(x => x.GuildId, true);
+			CommitTransaction();
 		}
 
 		/// <summary>
@@ -35,8 +42,7 @@ namespace Onyix
 		public LevelSettings GetLevelSettings(ulong guild)
 		{
 			// Find entity
-			ILiteCollection<LevelSettings> collection = GetCollection<LevelSettings>("levelsettings");
-			LevelSettings entity = collection.FindOne(x => x.GuildId == guild);
+			LevelSettings entity = levelsettings.FindOne(x => x.GuildId == guild);
 
 			// Create entity if it does not exist
 			if (entity == null)
@@ -45,8 +51,6 @@ namespace Onyix
 				{
 					GuildId = guild
 				};
-
-				collection.Insert(entity);
 			}
 
 			return entity;
@@ -60,8 +64,7 @@ namespace Onyix
 		public UserKarma GetUserKarma(ulong user)
 		{
 			// Find entity
-			ILiteCollection<UserKarma> collection = GetCollection<UserKarma>("userkarma");
-			UserKarma entity = collection.FindOne(x => x.UserId == user);
+			UserKarma entity = userkarma.FindOne(x => x.UserId == user);
 
 			// Create entity if it does not exist
 			if (entity == null)
@@ -70,8 +73,6 @@ namespace Onyix
 				{
 					UserId = user
 				};
-
-				collection.Insert(entity);
 			}
 
 			return entity;
@@ -86,8 +87,7 @@ namespace Onyix
 		public UserLevel GetUserLevel(ulong guild, ulong user)
 		{
 			// Find entity
-			ILiteCollection<UserLevel> collection = GetCollection<UserLevel>("userlevel");
-			UserLevel entity = collection.FindOne(x => x.GuildId == guild && x.UserId == user);
+			UserLevel entity = userlevel.FindOne(x => x.GuildId == guild && x.UserId == user);
 
 			// Create entity if it does not exist
 			if (entity == null)
@@ -97,11 +97,36 @@ namespace Onyix
 					GuildId = guild,
 					UserId = user
 				};
-
-				collection.Insert(entity);
 			}
 
 			return entity;
+		}
+
+		/// <summary>
+		/// Get the level settings for a guild
+		/// </summary>
+		/// <param name="entity">Level Settings entity</param>
+		public void SetLevelSettings(LevelSettings entity)
+		{
+			levelsettings.Upsert(entity);
+		}
+
+		/// <summary>
+		/// Get the karma for a user
+		/// </summary>
+		/// <param name="entity">User Karma entity</param>
+		public void SetUserKarma(UserKarma entity)
+		{
+			userkarma.Upsert(entity);
+		}
+
+		/// <summary>
+		/// Get the level for a user in a guild
+		/// </summary>
+		/// <param name="entity">User Level entity</param>
+		public void SetUserLevel(UserLevel entity)
+		{
+			userlevel.Upsert(entity);
 		}
 
 		/// <summary>
@@ -119,13 +144,14 @@ namespace Onyix
 				throw new Exception("Failed to start database transaction");
 			}
 
-			Program.Logs.Info("Started database transaction");
+			transcount++;
+			Program.Logs.Info("Beginning transaction {0}", transcount);
 		}
 
 		/// <summary>
-		/// End an active database transaction
+		/// Commit an active database transaction
 		/// </summary>
-		public void EndTransaction()
+		public void CommitTransaction()
 		{
 			// End transaction
 			try
@@ -134,30 +160,23 @@ namespace Onyix
 				{
 					throw new Exception("Commit returned false");
 				}
+
+				Program.Logs.Info("Commited transaction {0}", transcount);
 			}
 			catch (Exception e)
 			{
 				database.Rollback();
-				Program.Logs.Error(e, "Failed to commit database transaction!");
+				Program.Logs.Error(e, "Failed to commit database transaction {0}!", transcount);
 			}
 		}
 
 		/// <summary>
-		/// Get a collection from the database
+		/// Cancel an active database transaction
 		/// </summary>
-		/// <typeparam name="T">Entity class type</typeparam>
-		/// <param name="name">Name of collection</param>
-		/// <returns>Found collection</returns>
-		/// <exception cref="Exception">Collection does not exist</exception>
-		private ILiteCollection<T> GetCollection<T>(string name)
+		public void CancelTransaction()
 		{
-			// Check collection
-			if (!database.CollectionExists(name))
-			{
-				throw new Exception("This collection does not exist");
-			}
-
-			return database.GetCollection<T>(name);
+			database.Rollback();
+			Program.Logs.Info("Cancelled transaction {0}", transcount);
 		}
 	}
 }

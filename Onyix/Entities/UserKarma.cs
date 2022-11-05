@@ -1,7 +1,10 @@
-﻿namespace Onyix.Entities
+﻿using LiteDB;
+
+namespace Onyix.Entities
 {
 	public class UserKarma
 	{
+		public ObjectId Id { get; set; }
 		public ulong UserId { get; set; }
 		public long Upvotes { get; set; }
 		public long Downvotes { get; set; }

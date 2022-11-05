@@ -1,7 +1,10 @@
-﻿namespace Onyix.Entities
+﻿using LiteDB;
+
+namespace Onyix.Entities
 {
 	public class LevelSettings
 	{
+		public ObjectId Id { get; set; }
 		public ulong GuildId { get; set; }
 		public bool EnableLevels { get; set; }
 		public bool EnableLevelUpMessage { get; set; }
