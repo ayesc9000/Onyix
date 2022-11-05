@@ -9,16 +9,14 @@
     <UserSecretsId>02bb26d6-560d-4cbc-ac39-330d24171477</UserSecretsId>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	  
-	<!--
-	Dockerfile Run Arguments
-	The below has 2 different configurations to pick from:
-	1: Windows paths
-	2: MacOS/Linux paths
-	
-	Make sure that only one is uncommented at a time to prevent conficts.
-	-->
+	<!-- The runtime arguments below are different for non-Windows platforms. Please uncomment the one
+	that applies to your development environment, and comment out the rest. -->
+	  
+	<!-- Windows -->
 	<DockerfileRunArguments>-v $(APPDATA)/Microsoft/UserSecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments>
-	<!-- <DockerfileRunArguments>-v $(HOME)/.microsoft/usersecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments> -->
+	  
+	<!-- MacOS/Linux
+	<DockerfileRunArguments>-v $(HOME)/.microsoft/usersecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments> -->
   </PropertyGroup>
 
   <ItemGroup>
