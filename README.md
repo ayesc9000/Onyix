@@ -1,6 +1,12 @@
 # Onyix
 
-This is a C# re-write of my Discord bot. The code is licensed under the Apache 2.0 license. Please refer to `LICENSE.md` for more information.
+Onyix is an open-source general purpose Discord bot, written in C#.
+
+The code is licensed under the GPL v3 license. Please refer to `LICENSE.md` for more information. Contributors should read section 4 of this readme for more information regarding required boilerplate in source code.
+
+---
+
+**Table of contents:**
 
 1. [Setting up the development environment](#1-setting-up-the-development-environment)
 
@@ -13,6 +19,8 @@ This is a C# re-write of my Discord bot. The code is licensed under the Apache 2
    3.2 [Debugging within Docker on MacOS or Linux](#32-debugging-within-docker-on-macos-or-linux)
    
    3.3 [Building a release image](#33-building-a-release-image)
+
+4. [Source code boilerplate](#4-source-code-boilerplate)
 
 ## 1. Setting up the development environment
 
@@ -41,7 +49,7 @@ dotnet user-secrets set "NAME" "VALUE"
 
 ### 3.1 Debugging within Docker on Windows
 
-Onyix comes pre-configured to support debugging within a Docker container for Windows users.
+Onyix comes preconfigured to support debugging within a Docker container for Windows users.
 
 Make sure Docker Desktop is already running in the background. In Visual Studio, open the Debug Target drop down, and select the Docker option. Begin debugging by either clicking the Start Debugging button, or by pressing F5.
 
@@ -72,3 +80,34 @@ Make sure Docker Desktop is already running, if applicable. Open a terminal in t
 ```shell
 docker build
 ```
+
+## 4. Source code boilerplate
+
+All source files in this repository should include boilerplate for the GPL v3 license. A template for this is included below:
+
+```csharp
+/* Onyix - An open-source Discord bot
+ * Copyright (C) 2022 Liam "AyesC" Hogan
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see http://www.gnu.org/licenses/.
+ */
+```
+
+You may modify these aspects of the boilerplate:
+
+- The copyright date
+
+- The commenting syntax (if necessary)
+
+Any changes to the boilerplate that do not conform to these requirements will not be accepted.
