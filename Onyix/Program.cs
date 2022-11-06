@@ -67,7 +67,24 @@ namespace Onyix
 		/// </summary>
 		public static string Version
 		{
-			get => Assembly.GetEntryAssembly().GetName().Version.ToString();
+			get
+			{
+				Assembly? asm = Assembly.GetEntryAssembly();
+
+				if (asm is null)
+				{
+					throw new Exception("Assembly is null!");
+				}
+
+				Version? ver = asm.GetName().Version;
+
+				if (ver is null)
+				{
+					throw new Exception("Assembly version is null!");
+				}
+
+				return ver.ToString();
+			}
 		}
 	}
 }

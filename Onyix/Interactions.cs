@@ -67,11 +67,18 @@ namespace Onyix
 
 			try
 			{
-				guildid = ulong.Parse(Environment.GetEnvironmentVariable("GUILD"));
+				string? guildenv = Environment.GetEnvironmentVariable("GUILD");
+
+				if (guildenv is null)
+				{
+					throw new Exception("No guild ID");
+				}
+
+				guildid = ulong.Parse(guildenv);
 			}
 			catch (Exception e)
 			{
-				throw new Exception("Invalid format for Guild ID", e);
+				throw new Exception("Invalid format for guild ID", e);
 			}
 
 			Program.Logs.Info($"Pushing commands to {guildid}");

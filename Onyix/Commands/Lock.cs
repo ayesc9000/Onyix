@@ -71,14 +71,13 @@ namespace Onyix.Commands
 		{
 			// Get command parameters
 			long mode = (long)command.Data.Options.ElementAt(0).Value;
-			SocketTextChannel? channel = command.Channel as SocketTextChannel;
 
 			// Check if channel is null
-			if (channel == null)
+			if (command.Channel is not SocketTextChannel channel)
 			{
 				return;
 			}
-			
+
 			// Lock or unlock the channel
 			if (mode == 1)
 			{

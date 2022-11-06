@@ -57,13 +57,11 @@ namespace Onyix.Commands
 		
 		public async Task Execute(Client client, SocketSlashCommand command)
 		{
+			// Check if this interaction occured in a guild
+			if (command.GuildId is null) return;
+
 			// Check if a user was specified
-			// TODO: Check if a null value case is actually possible here
-			IUser target = command.Data.Options.Count switch
-			{
-				0 => command.User,
-				_ => command.Data.Options.ElementAt(0).Value as IUser
-			};
+			IUser target = command.Data.Options.First().Value as IUser ?? command.User;
 
 			// Check if target user is a bot
 			if (target.IsBot)
