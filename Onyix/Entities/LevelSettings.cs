@@ -16,6 +16,7 @@
  */
 
 using LiteDB;
+using System.Collections.Generic;
 
 namespace Onyix.Entities
 {
@@ -31,6 +32,7 @@ namespace Onyix.Entities
 		public int Cooldown { get; set; }
 		public string LevelUpTitle { get; set; }
 		public string LevelUpMessage { get; set; }
+		public Dictionary<int, ulong> LevelRoles { get; set; }
 
 		public LevelSettings()
 		{
@@ -44,6 +46,7 @@ namespace Onyix.Entities
 			Cooldown = 60;
 			LevelUpTitle = "Leveled Up!";
 			LevelUpMessage = "You have leveled up to level $$LVL!";
+			LevelRoles = new();
 		}
 	}
 }
