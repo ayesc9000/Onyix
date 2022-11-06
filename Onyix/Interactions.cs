@@ -138,7 +138,7 @@ namespace Onyix
 		/// Use reflection to find all classes implementing ICommand
 		/// </summary>
 		/// <returns>List of all applicable classes</returns>
-		private List<ICommand> GetCommandInterfaces()
+		private static List<ICommand> GetCommandInterfaces()
 		{
 			// Get executing assembly
 			Assembly asm = Assembly.GetExecutingAssembly();
