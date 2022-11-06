@@ -62,13 +62,10 @@ namespace Onyix
 			LevelSettings entity = levelsettings.FindOne(x => x.GuildId == guild);
 
 			// Create entity if it does not exist
-			if (entity == null)
+			entity ??= new()
 			{
-				entity = new()
-				{
-					GuildId = guild
-				};
-			}
+				GuildId = guild
+			};
 
 			return entity;
 		}
@@ -84,13 +81,10 @@ namespace Onyix
 			UserKarma entity = userkarma.FindOne(x => x.UserId == user);
 
 			// Create entity if it does not exist
-			if (entity == null)
+			entity ??= new()
 			{
-				entity = new()
-				{
-					UserId = user
-				};
-			}
+				UserId = user
+			};
 
 			return entity;
 		}
@@ -107,14 +101,11 @@ namespace Onyix
 			UserLevel entity = userlevel.FindOne(x => x.GuildId == guild && x.UserId == user);
 
 			// Create entity if it does not exist
-			if (entity == null)
+			entity ??= new()
 			{
-				entity = new()
-				{
-					GuildId = guild,
-					UserId = user
-				};
-			}
+				GuildId = guild,
+				UserId = user
+			};
 
 			return entity;
 		}
