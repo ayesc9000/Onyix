@@ -21,7 +21,7 @@ namespace Onyix.Entities
 {
 	public class LevelSettings
 	{
-		public ObjectId Id { get; set; }
+		public ObjectId? Id { get; set; }
 		public ulong GuildId { get; set; }
 		public bool EnableLevels { get; set; }
 		public bool EnableLevelUpMessage { get; set; }
@@ -34,6 +34,7 @@ namespace Onyix.Entities
 
 		public LevelSettings()
 		{
+			Id = null;
 			GuildId = 0;
 			EnableLevels = false;
 			EnableLevelUpMessage = true;

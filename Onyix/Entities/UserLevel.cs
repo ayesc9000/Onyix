@@ -22,7 +22,7 @@ namespace Onyix.Entities
 {
 	public class UserLevel
 	{
-		public ObjectId Id { get; set; }
+		public ObjectId? Id { get; set; }
 		public ulong UserId { get; set; }
 		public ulong GuildId { get; set; }
 		public long XP { get; set; }
@@ -32,6 +32,7 @@ namespace Onyix.Entities
 
 		public UserLevel()
 		{
+			Id = null;
 			UserId = 0;
 			GuildId = 0;
 			XP = 0;

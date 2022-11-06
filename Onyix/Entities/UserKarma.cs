@@ -21,7 +21,7 @@ namespace Onyix.Entities
 {
 	public class UserKarma
 	{
-		public ObjectId Id { get; set; }
+		public ObjectId? Id { get; set; }
 		public ulong UserId { get; set; }
 		public long Upvotes { get; set; }
 		public long Downvotes { get; set; }
@@ -31,6 +31,7 @@ namespace Onyix.Entities
 
 		public UserKarma()
 		{
+			Id = null;
 			UserId = 0;
 			Upvotes = 0;
 			Downvotes = 0;
