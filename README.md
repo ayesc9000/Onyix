@@ -116,9 +116,9 @@ docker build
 
 ## 5. Embed colours
 
-| Color name | Hex value | Use case or purpose           |
-| ---------- | --------- | ----------------------------- |
-| Gray       | `#606266` | General information           |
-| Green      | `#32a852` | Success or command completion |
-| Yellow     | `#edbc28` | Warning or low-priority error |
-| Red        | `#e83c3c` | High priority error           |
+| Colour name | Hex value | Use case or purpose           |
+| ----------- | --------- | ----------------------------- |
+| Gray        | `#606266` | General information           |
+| Green       | `#32a852` | Success or command completion |
+| Yellow      | `#edbc28` | Warning or low-priority error |
+| Red         | `#e83c3c` | High priority error           |
