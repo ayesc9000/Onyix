@@ -94,7 +94,17 @@ namespace Onyix
 		/// <param name="command">Slash command details</param>
 		private async Task SlashCommandExecuted(SocketSlashCommand command)
 		{
-			await interactions.ExecuteCommand(this, command);
+			try
+			{
+				// Run interaction
+				await interactions.ExecuteCommand(this, command);
+			}
+			catch (Exception e)
+			{
+				// Reply with error message
+				await command.RespondAsync("An internal error occured. Try again later.", ephemeral: true);
+				Program.Logs.Error(e, "An unhandled exception occured while running a slash command!");
+			}
 		}
 
 		/// <summary>
