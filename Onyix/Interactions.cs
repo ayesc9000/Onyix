@@ -150,11 +150,8 @@ namespace Onyix
 				// Check if the type is assignable from ICommand
 				if (typeof(ICommand).IsAssignableFrom(type) && !type.IsInterface)
 				{
-					// Create a new instance of the type if it is
-					ICommand? command = Activator.CreateInstance(type) as ICommand;
-
 					// Make sure it is not null
-					if (command == null) continue;
+					if (Activator.CreateInstance(type) is not ICommand command) continue;
 
 					interfaces.Add(command);
 				}
