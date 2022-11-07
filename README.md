@@ -51,7 +51,7 @@ You may modify these aspects of the boilerplate:
 
 - The copyright date
 
-- The commenting syntax (if necessary)
+- The commenting syntax
 
 Any changes to the boilerplate that do not conform to these requirements will not be accepted.
 
