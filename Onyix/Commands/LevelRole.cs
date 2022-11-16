@@ -15,14 +15,15 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
+using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using Onyix.Entities;
+using System;
 using System.Threading.Tasks;
-using DSharpPlus.Entities;
 
 namespace Onyix.Commands
 {
-	[SlashCommandGroup("levelrole", "List and modify the assigned role for each level", true)]
+	[SlashCommandGroup("levelroles", "List and modify the assigned role for each level", true)]
 	public class LevelRole : ApplicationCommandModule
 	{
 		[SlashCommand("list", "Show a list of every level's assigned role", true)]
@@ -34,11 +35,22 @@ namespace Onyix.Commands
 			// Get guild data
 			LevelSettings settings = Database.GetLevelSettings(ctx.Guild.Id);
 
+			// Check the amount of items in the list
+			if (settings.LevelRoles.Count == 0)
+			{
+				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+					.WithTitle("Level roles")
+					.WithDescription("There are no items to display.")
+					.WithColor(Colors.Gray));
+
+				return;
+			}
+
 			// Reply
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
-					.WithTitle("List")
-					.WithDescription("This command is not finished. Try again later.")
-					.WithColor(Colors.Gray));
+				.WithTitle("List")
+				.WithDescription("This command is not finished. Try again later.")
+				.WithColor(Colors.Gray));
 		}
 
 		[SlashCommand("assign", "Assign a role for a level", true)]
@@ -54,9 +66,9 @@ namespace Onyix.Commands
 
 			// Reply
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
-					.WithTitle("Assign")
-					.WithDescription("This command is not finished. Try again later.")
-					.WithColor(Colors.Gray));
+				.WithTitle("Assign")
+				.WithDescription("This command is not finished. Try again later.")
+				.WithColor(Colors.Gray));
 		}
 
 		[SlashCommand("remove", "Remove the assigned role for a level", true)]
@@ -71,9 +83,21 @@ namespace Onyix.Commands
 
 			// Reply
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
-					.WithTitle("Remove")
-					.WithDescription("This command is not finished. Try again later.")
-					.WithColor(Colors.Gray));
+				.WithTitle("Remove")
+				.WithDescription("This command is not finished. Try again later.")
+				.WithColor(Colors.Gray));
+		}
+
+		/// <summary>
+		/// Calculate the amount of pages based on the amount of items
+		/// </summary>
+		/// <param name="count">Item count</param>
+		/// <returns>An integer representing the amount of pages needed to display the amount of items</returns>
+		private static int PageCount(int count)
+		{
+			// Note: the .0 is important here, since it causes .NET to
+			// calculate this as if it were a double instead of an int.
+			return (int)Math.Ceiling(count / 9.0);
 		}
 	}
 }
