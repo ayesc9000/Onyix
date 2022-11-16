@@ -22,13 +22,13 @@ namespace Onyix.Entities
 {
 	public class UserLevel
 	{
-		public required ObjectId? Id { get; set; }
-		public required ulong UserId { get; set; }
-		public required ulong GuildId { get; set; }
-		public required long XP { get; set; }
-		public required long TotalXP { get; set; }
-		public required long Level { get; set; }
-		public required DateTime LastGain { get; set; }
+		public ObjectId? Id { get; set; }
+		public ulong UserId { get; set; }
+		public ulong GuildId { get; set; }
+		public long XP { get; set; }
+		public long TotalXP { get; set; }
+		public long Level { get; set; }
+		public DateTime LastGain { get; set; }
 
 		public UserLevel()
 		{

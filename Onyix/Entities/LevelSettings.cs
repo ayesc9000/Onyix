@@ -22,17 +22,17 @@ namespace Onyix.Entities
 {
 	public class LevelSettings
 	{
-		public required ObjectId? Id { get; set; }
-		public required ulong GuildId { get; set; }
-		public required bool EnableLevels { get; set; }
-		public required bool EnableLevelUpMessage { get; set; }
-		public required double Multiplier { get; set; }
-		public required int XpPerMessage { get; set; }
-		public required int XpPerLevel { get; set; }
-		public required int Cooldown { get; set; }
-		public required string LevelUpTitle { get; set; }
-		public required string LevelUpMessage { get; set; }
-		public required Dictionary<int, ulong> LevelRoles { get; set; }
+		public ObjectId? Id { get; set; }
+		public ulong GuildId { get; set; }
+		public bool EnableLevels { get; set; }
+		public bool EnableLevelUpMessage { get; set; }
+		public double Multiplier { get; set; }
+		public int XpPerMessage { get; set; }
+		public int XpPerLevel { get; set; }
+		public int Cooldown { get; set; }
+		public string LevelUpTitle { get; set; }
+		public string LevelUpMessage { get; set; }
+		public Dictionary<int, ulong> LevelRoles { get; set; }
 
 		public LevelSettings()
 		{
