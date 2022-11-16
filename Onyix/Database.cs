@@ -21,20 +21,19 @@ using System;
 
 namespace Onyix
 {
-	public class Database
+	public static class Database
 	{
-		private long transcount;
-		private readonly LiteDatabase database;
-		private readonly ILiteCollection<LevelSettings> levelsettings;
-		private readonly ILiteCollection<UserKarma> userkarma;
-		private readonly ILiteCollection<UserLevel> userlevel;
+		private static long transcount = 0;
+		private static LiteDatabase? database;
+		private static ILiteCollection<LevelSettings>? levelsettings;
+		private static ILiteCollection<UserKarma>? userkarma;
+		private static ILiteCollection<UserLevel>? userlevel;
 
 		/// <summary>
-		/// Create a new LiteDB instance
+		/// Start the LiteDB database
 		/// </summary>
-		public Database()
+		public static void Initialize()
 		{
-			transcount = 0;
 			database = new(Paths.Database);
 
 			// Get collections
@@ -44,11 +43,31 @@ namespace Onyix
 
 			// Configure indexes
 			StartTransaction();
+
+			levelsettings.DropIndex("*");
 			levelsettings.EnsureIndex(x => x.GuildId, true);
+
+			userkarma.DropIndex("*");
 			userkarma.EnsureIndex(x => x.UserId, true);
+
+			userlevel.DropIndex("*");
 			userlevel.EnsureIndex(x => x.UserId, true);
 			userlevel.EnsureIndex(x => x.GuildId, true);
+
 			CommitTransaction();
+		}
+
+		/// <summary>
+		/// Checks whether the database has been initialized and is online
+		/// </summary>
+		/// <exception cref="Exception"></exception>
+		public static void VerifyOnline()
+		{
+			if (database is null
+				|| levelsettings is null
+				|| userkarma is null
+				|| userlevel is null)
+				throw new Exception("Database is not ready!");
 		}
 
 		/// <summary>
@@ -56,18 +75,10 @@ namespace Onyix
 		/// </summary>
 		/// <param name="guild">Guild ID</param>
 		/// <returns>Level settings entity</returns>
-		public LevelSettings GetLevelSettings(ulong guild)
+		public static LevelSettings GetLevelSettings(ulong guild)
 		{
-			// Find entity
-			LevelSettings entity = levelsettings.FindOne(x => x.GuildId == guild);
-
-			// Create entity if it does not exist
-			entity ??= new()
-			{
-				GuildId = guild
-			};
-
-			return entity;
+			VerifyOnline();
+			return levelsettings.FindOne(x => x.GuildId == guild) ?? new(guild);
 		}
 
 		/// <summary>
@@ -75,18 +86,10 @@ namespace Onyix
 		/// </summary>
 		/// <param name="user">User ID</param>
 		/// <returns>User karma entity</returns>
-		public UserKarma GetUserKarma(ulong user)
+		public static UserKarma GetUserKarma(ulong user)
 		{
-			// Find entity
-			UserKarma entity = userkarma.FindOne(x => x.UserId == user);
-
-			// Create entity if it does not exist
-			entity ??= new()
-			{
-				UserId = user
-			};
-
-			return entity;
+			VerifyOnline();
+			return userkarma.FindOne(x => x.UserId == user) ?? new(user);
 		}
 
 		/// <summary>
@@ -95,27 +98,19 @@ namespace Onyix
 		/// <param name="guild">Guild ID</param>
 		/// <param name="user">User ID</param>
 		/// <returns>User level entity</returns>
-		public UserLevel GetUserLevel(ulong guild, ulong user)
+		public static UserLevel GetUserLevel(ulong guild, ulong user)
 		{
-			// Find entity
-			UserLevel entity = userlevel.FindOne(x => x.GuildId == guild && x.UserId == user);
-
-			// Create entity if it does not exist
-			entity ??= new()
-			{
-				GuildId = guild,
-				UserId = user
-			};
-
-			return entity;
+			VerifyOnline();
+			return userlevel.FindOne(x => x.GuildId == guild && x.UserId == user) ?? new(user, guild);
 		}
 
 		/// <summary>
 		/// Get the level settings for a guild
 		/// </summary>
 		/// <param name="entity">Level Settings entity</param>
-		public void SetLevelSettings(LevelSettings entity)
+		public static void SetLevelSettings(LevelSettings entity)
 		{
+			VerifyOnline();
 			levelsettings.Upsert(entity);
 		}
 
@@ -123,8 +118,9 @@ namespace Onyix
 		/// Get the karma for a user
 		/// </summary>
 		/// <param name="entity">User Karma entity</param>
-		public void SetUserKarma(UserKarma entity)
+		public static void SetUserKarma(UserKarma entity)
 		{
+			VerifyOnline();
 			userkarma.Upsert(entity);
 		}
 
@@ -132,8 +128,9 @@ namespace Onyix
 		/// Get the level for a user in a guild
 		/// </summary>
 		/// <param name="entity">User Level entity</param>
-		public void SetUserLevel(UserLevel entity)
+		public static void SetUserLevel(UserLevel entity)
 		{
+			VerifyOnline();
 			userlevel.Upsert(entity);
 		}
 
@@ -142,15 +139,14 @@ namespace Onyix
 		/// </summary>
 		/// <remarks>There can only be one active transaction per thread</remarks>
 		/// <exception cref="Exception">Failed to start transaction</exception>
-		public void StartTransaction()
+		public static void StartTransaction()
 		{
+			VerifyOnline();
+
 			// Start transaction
+			// TODO: Should we throw or return null in this state?
 			if (!database.BeginTrans())
-			{
-				// TODO: Not sure whether to throw exception or return null in this state.
-				// An exception will do for now. Fix this later.
 				throw new Exception("Failed to start database transaction");
-			}
 
 			transcount++;
 			Program.Logs.Info("Beginning transaction {0}", transcount);
@@ -159,15 +155,15 @@ namespace Onyix
 		/// <summary>
 		/// Commit an active database transaction
 		/// </summary>
-		public void CommitTransaction()
+		public static void CommitTransaction()
 		{
+			VerifyOnline();
+
 			// End transaction
 			try
 			{
 				if (!database.Commit())
-				{
 					throw new Exception("Commit returned false");
-				}
 
 				Program.Logs.Info("Commited transaction {0}", transcount);
 			}
@@ -181,7 +177,7 @@ namespace Onyix
 		/// <summary>
 		/// Cancel an active database transaction
 		/// </summary>
-		public void CancelTransaction()
+		public static void CancelTransaction()
 		{
 			database.Rollback();
 			Program.Logs.Info("Cancelled transaction {0}", transcount);

@@ -15,97 +15,42 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using Discord;
-using Discord.WebSocket;
-using System.Collections.Generic;
-using System.Linq;
+using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using System.Threading.Tasks;
 
 namespace Onyix.Commands
 {
-	public class LockCommand : ICommand
+	public class LockCommand : ApplicationCommandModule
 	{
-		public string Name
+		[SlashCommand("lock", "Locks or unlocks a channel.", true)]
+		public async Task Execute(InteractionContext ctx,
+			[Option("mode", "Whether to lock or unlock the channel")]
+			[Choice("Lock", 1)]
+			[Choice("Unlock", 2)] long mode)
 		{
-			get => "lock";
-		}
-
-		public string Description
-		{
-			get => "Locks or unlocks a channel";
-		}
-
-		public List<SlashCommandOptionBuilder>? Options
-		{
-			get => new()
-			{
-				new SlashCommandOptionBuilder()
-				{
-					Name = "mode",
-					Description = "Whether to lock or unlock the channel",
-					IsRequired = true,
-					Type = ApplicationCommandOptionType.Integer,
-					Choices = new()
-					{
-						new()
-						{
-							Name = "Lock",
-							Value = 1
-						},
-						new()
-						{
-							Name = "Unlock",
-							Value = 2
-						}
-					}
-				}
-			};
-		}
-
-		public bool UseInDMs
-		{
-			get => false;
-		}
-		
-		public async Task Execute(Client client, SocketSlashCommand command)
-		{
-			// Get command parameters
-			long mode = (long)command.Data.Options.ElementAt(0).Value;
-
-			// Check if channel is null
-			if (command.Channel is not SocketTextChannel channel)
-			{
-				return;
-			}
+			// Check if interaction occured in a guild
+			if (ctx.Guild is null) return;
 
 			// Lock or unlock the channel
-			if (mode == 1)
+			if (mode is 1)
 			{
 				// Lock
-				await channel.AddPermissionOverwriteAsync(channel.Guild.EveryoneRole, new OverwritePermissions(sendMessages: PermValue.Deny));
-
-				EmbedBuilder embed = new()
-				{
-					Title = "Locked",
-					Description = "The channel has been locked.",
-					Color = new Color(0x26C95A)
-				};
-
-				await command.RespondAsync(embed: embed.Build(), ephemeral: true);
+				await ctx.Channel.AddOverwriteAsync(ctx.Guild.EveryoneRole, deny: DSharpPlus.Permissions.SendMessages);
+				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+					.WithTitle("Locked")
+					.WithDescription("The channel has been locked.")
+					.WithColor(Colors.Green));
 			}
-			else if (mode == 2)
+			else
 			{
 				// Unlock
-				await channel.AddPermissionOverwriteAsync(channel.Guild.EveryoneRole, new OverwritePermissions(sendMessages: PermValue.Allow));
-
-				EmbedBuilder embed = new()
-				{
-					Title = "Unlocked",
-					Description = "The channel has been unlocked.",
-					Color = new Color(0x26C95A)
-				};
-
-				await command.RespondAsync(embed: embed.Build(), ephemeral: true);
+				// TODO: Restore original permission for this rather than just set it to allow
+				await ctx.Channel.AddOverwriteAsync(ctx.Guild.EveryoneRole, allow: DSharpPlus.Permissions.SendMessages);
+				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+					.WithTitle("Unlocked")
+					.WithDescription("The channel has been unlocked.")
+					.WithColor(Colors.Green));
 			}
 		}
 	}

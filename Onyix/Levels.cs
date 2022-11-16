@@ -15,8 +15,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using Discord;
-using Discord.Commands;
+using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using Onyix.Entities;
 using System;
 using System.Threading.Tasks;
@@ -25,18 +25,15 @@ namespace Onyix
 {
 	public static class Levels
 	{
-		public static async Task GiveXPAsync(Client client, SocketCommandContext context)
+		public static async Task GiveXPAsync(MessageCreateEventArgs e)
 		{
 			// Get the user and server data
-			UserLevel user = client.Database.GetUserLevel(context.Message.Author.Id, context.Guild.Id);
-			LevelSettings settings = client.Database.GetLevelSettings(context.Guild.Id);
+			UserLevel user = Database.GetUserLevel(e.Author.Id, e.Guild.Id);
+			LevelSettings settings = Database.GetLevelSettings(e.Guild.Id);
 
+			// TODO: Debug this
 			// Check if we can give XP right now
-			if (!((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown)))
-			{
-				// TODO: Turn this back on layter :D
-				//return;
-			}
+			if ((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown) is not true) return;
 			
 			// Give XP
 			user.XP += settings.XpPerMessage;
@@ -52,28 +49,30 @@ namespace Onyix
 				// Check if we can send level up message
 				if (settings.EnableLevelUpMessage)
 				{
-					// Send level up message
-					EmbedBuilder embed = new()
-					{
-						Title = settings.LevelUpTitle,
-						Description = settings.LevelUpMessage,
-						Color = new Color(0x26C95A)
-					};
-
-					await context.Message.ReplyAsync("", false, embed.Build());
+					await e.Message.RespondAsync(new DiscordEmbedBuilder()
+						.WithTitle(settings.LevelUpTitle)
+						.WithDescription(settings.LevelUpMessage)
+						.WithColor(Colors.Green));
 				}
 			}
 
 			// Commit data to database
-			Program.Logs.Info("Updating levels");
-			client.Database.StartTransaction();
-			client.Database.SetUserLevel(user);
-			client.Database.CommitTransaction();
+			Database.StartTransaction();
+			Database.SetUserLevel(user);
+			Database.CommitTransaction();
 		}
 
 		public static double GetMultiplier(long level, double multipler)
 		{
 			return 1.0 + (level * (multipler / 10));
+		}
+
+		public static string GetLevelProgress(UserLevel user, LevelSettings settings)
+		{
+			long current = user.XP;
+			double total = settings.XpPerLevel * Levels.GetMultiplier(user.Level, settings.Multiplier);
+
+			return current + "/" + total;
 		}
 	}
 }

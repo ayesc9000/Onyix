@@ -48,5 +48,20 @@ namespace Onyix.Entities
 			LevelUpMessage = "You have leveled up to level $$LVL!";
 			LevelRoles = new();
 		}
+
+		public LevelSettings(ulong guild)
+		{
+			Id = null;
+			GuildId = guild;
+			EnableLevels = false;
+			EnableLevelUpMessage = true;
+			XpPerMessage = 15;
+			XpPerLevel = 270;
+			Multiplier = 1;
+			Cooldown = 60;
+			LevelUpTitle = "Leveled Up!";
+			LevelUpMessage = "You have leveled up to level $$LVL!";
+			LevelRoles = new();
+		}
 	}
 }

@@ -40,5 +40,16 @@ namespace Onyix.Entities
 			Level = 0;
 			LastGain = DateTime.MinValue;
 		}
+
+		public UserLevel(ulong user, ulong guild)
+		{
+			Id = null;
+			UserId = user;
+			GuildId = guild;
+			XP = 0;
+			TotalXP = 0;
+			Level = 0;
+			LastGain = DateTime.MinValue;
+		}
 	}
 }

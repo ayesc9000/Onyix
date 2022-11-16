@@ -15,102 +15,48 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using Discord;
-using Discord.WebSocket;
+using DSharpPlus.Entities;
+using DSharpPlus.SlashCommands;
 using Onyix.Entities;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Onyix.Commands
 {
-	public class Level : ICommand
+	public class Level : ApplicationCommandModule
 	{
-		public string Name
+		[SlashCommand("level", "Displays your current level in this guild.", true)]
+		public async Task Execute(InteractionContext ctx,
+			[Option("user", "Get the level for a specific user")] DiscordUser? target = null)
 		{
-			get => "level";
-		}
+			// Check if interaction occured in a guild
+			if (ctx.Guild is null) return;
 
-		public string Description
-		{
-			get => "Displays your current level in this guild.";
-		}
-
-		public List<SlashCommandOptionBuilder>? Options
-		{
-			get => new()
-			{
-				new SlashCommandOptionBuilder()
-				{
-					Name = "user",
-					Description = "The user's level to check",
-					IsRequired = false,
-					Type = ApplicationCommandOptionType.User
-				}
-			};
-		}
-
-		public bool UseInDMs
-		{
-			get => false;
-		}
-		
-		public async Task Execute(Client client, SocketSlashCommand command)
-		{
-			// Check if this interaction occured in a guild
-			if (command.GuildId is null) return;
-
-			// Check if a user was specified
-			IUser target = command.Data.Options.First().Value as IUser ?? command.User;
+			// Check if a specific user was provided
+			target ??= ctx.Member;
 
 			// Check if target user is a bot
 			if (target.IsBot)
 			{
-				EmbedBuilder error = new()
-				{
-					Title = $"Error",
-					Description = "Bots do not have levels",
-					Color = Color.Red
-				};
+				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+					.WithTitle("Error")
+					.WithDescription("Bots cannot participate in the level system.")
+					.WithColor(Colors.Red));
 
-				await command.RespondAsync(embed: error.Build());
 				return;
 			}
 
 			// Get user information
-			UserLevel user = client.Database.GetUserLevel(target.Id, (ulong)command.GuildId);
-			LevelSettings settings = client.Database.GetLevelSettings((ulong)command.GuildId);
+			UserLevel user = Database.GetUserLevel(target.Id, ctx.Guild.Id);
+			LevelSettings settings = Database.GetLevelSettings(ctx.Guild.Id);
 
-			EmbedBuilder embed = new()
-			{
-				Title = $"{target.Username}'s Level",
-				Description = "",
-				Fields = new List<EmbedFieldBuilder>()
-				{
-					new()
-					{
-						Name = "Level",
-						Value = user.Level,
-						IsInline = true
-					},
-					new()
-					{
-						Name = "Total XP",
-						Value = user.TotalXP,
-						IsInline = true
-					},
-					new()
-					{
-						Name = "Progress to next level",
-						Value = $"{user.XP}/{settings.XpPerLevel * Levels.GetMultiplier(user.Level, settings.Multiplier)}",
-						IsInline = false
-					}
-				},
-				ThumbnailUrl = target.GetAvatarUrl(),
-				Color = new Color(0x26C95A)
-			};
-
-			await command.RespondAsync(embed: embed.Build());
+			// Reply with embed
+			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+				.WithTitle($"{target.Username}'s Level")
+				.WithColor(Colors.Gray)
+				.WithThumbnail(target.AvatarUrl)
+				.AddField("Level", user.Level.ToString(), true)
+				.AddField("Total XP", user.TotalXP.ToString(), true)
+				.AddField("Progress to next level", Levels.GetLevelProgress(user, settings), false));
 		}
 	}
 }

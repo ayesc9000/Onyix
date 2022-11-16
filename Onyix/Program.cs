@@ -26,7 +26,10 @@ namespace Onyix
 {
 	public partial class Program
 	{
-		private static readonly Logger logs = LogManager.GetCurrentClassLogger();
+		// TODO: Not a big fan of Program being static. See if I can make it instanced again.
+		private static string? version;
+		private static Bot? bot;
+		private static Logger? logs;
 
 		/// <summary>
 		/// Main entry point
@@ -34,8 +37,21 @@ namespace Onyix
 		/// <param name="args">Command-line arguments</param>
 		public static Task Main(string[] args)
 		{
+			// Get version string
+			// TODO: See if this can be simplified
+			Assembly? asm = Assembly.GetEntryAssembly();
+
+			if (asm is not null)
+			{
+				Version? ver = asm.GetName().Version;
+
+				if (ver is not null)
+					version = ver.ToString();
+			}
+
+			// Configure NLog
+			logs = LogManager.GetCurrentClassLogger();
 			LogManager.Configuration = new XmlLoggingConfiguration(Paths.NLog);
-			Logs.Info("Onyix version " + Version);
 
 #if DEBUG
 			// Load environment variables from user secrets if we are in a debug build
@@ -44,47 +60,34 @@ namespace Onyix
 			IConfigurationRoot config = builder.Build();
 
 			foreach (IConfigurationSection child in config.GetChildren())
-			{
 				Environment.SetEnvironmentVariable(child.Key, child.Value);
-			}
 
-			Logs.Info("Loaded environment varibles from user secrets");
+			Logs.Info("Loaded user secrets into environment variables");
 #endif
 
-			return new Client().Start();
+			// Create bot and database
+			Logs.Info("Onyix version " + Version);
+			bot = new();
+
+			// Start bot
+			return bot.Start();
 		}
+
+		// TODO: Possible null references on getters below.
 
 		/// <summary>
-		/// Return the NLog manager
+		/// Get the version string
 		/// </summary>
-		public static Logger Logs
-		{
-			get => logs;
-		}
+		public static string Version => version;
 
 		/// <summary>
-		/// Return the version of the bot
+		/// Get the bot instance
 		/// </summary>
-		public static string Version
-		{
-			get
-			{
-				Assembly? asm = Assembly.GetEntryAssembly();
+		public static Bot Bot => bot;
 
-				if (asm is null)
-				{
-					throw new Exception("Assembly is null!");
-				}
-
-				Version? ver = asm.GetName().Version;
-
-				if (ver is null)
-				{
-					throw new Exception("Assembly version is null!");
-				}
-
-				return ver.ToString();
-			}
-		}
+		/// <summary>
+		/// Get the NLog logger
+		/// </summary>
+		public static Logger Logs => logs;
 	}
 }

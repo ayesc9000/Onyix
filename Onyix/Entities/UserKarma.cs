@@ -39,5 +39,16 @@ namespace Onyix.Entities
 			Posts = 0;
 			Removed = 0;
 		}
+
+		public UserKarma(ulong user)
+		{
+			Id = null;
+			UserId = user;
+			Upvotes = 0;
+			Downvotes = 0;
+			Awards = 0;
+			Posts = 0;
+			Removed = 0;
+		}
 	}
 }
