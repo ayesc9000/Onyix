@@ -21,13 +21,13 @@ namespace Onyix.Entities
 {
 	public class UserKarma
 	{
-		public ObjectId? Id { get; set; }
-		public ulong UserId { get; set; }
-		public long Upvotes { get; set; }
-		public long Downvotes { get; set; }
-		public long Awards { get; set; }
-		public long Posts { get; set; }
-		public long Removed { get; set; }
+		public required ObjectId? Id { get; set; }
+		public required ulong UserId { get; set; }
+		public required long Upvotes { get; set; }
+		public required long Downvotes { get; set; }
+		public required long Awards { get; set; }
+		public required long Posts { get; set; }
+		public required long Removed { get; set; }
 
 		public UserKarma()
 		{
