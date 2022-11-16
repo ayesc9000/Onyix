@@ -149,7 +149,6 @@ namespace Onyix
 				throw new Exception("Failed to start database transaction");
 
 			transcount++;
-			Program.Logs.Info("Beginning transaction {0}", transcount);
 		}
 
 		/// <summary>
