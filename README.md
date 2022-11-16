@@ -1,6 +1,6 @@
 # Onyix
 
-Onyix is an open-source general purpose Discord bot, written in C#.
+Onyix is an open-source general purpose Discord bot, written in C# using DSharpPlus.
 
 The code is licensed under the GPL v3 license. Please refer to `LICENSE.md` for more information. Contributors should read section 1 of this readme for more information regarding required boilerplate in source code.
 
@@ -56,6 +56,8 @@ You may modify these aspects of the boilerplate:
 Any changes to the boilerplate that do not conform to these requirements will not be accepted.
 
 ## 2. Setting up the development environment
+
+This repository requires .NET 7 with Visual Studio 2022 17.4 or better to function correctly.
 
 Everything should be pretty much ready to go right out of the box after you clone the repository to your machine.
 
