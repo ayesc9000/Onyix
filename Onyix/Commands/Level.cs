@@ -25,7 +25,7 @@ namespace Onyix.Commands
 	public class Level : ApplicationCommandModule
 	{
 		[SlashCommand("level", "Displays your current level in this guild.", true)]
-		public async Task Execute(InteractionContext ctx,
+		public static async Task Execute(InteractionContext ctx,
 			[Option("user", "Get the level for a specific user")] DiscordUser? target = null)
 		{
 			// Check if interaction occured in a guild
@@ -40,7 +40,7 @@ namespace Onyix.Commands
 				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 					.WithTitle("Error")
 					.WithDescription("Bots cannot participate in the level system.")
-					.WithColor(Colors.Red));
+					.WithColor(Colors.Red), true);
 
 				return;
 			}
@@ -56,7 +56,7 @@ namespace Onyix.Commands
 				.WithThumbnail(target.AvatarUrl)
 				.AddField("Level", user.Level.ToString(), true)
 				.AddField("Total XP", user.TotalXP.ToString(), true)
-				.AddField("Progress to next level", Levels.GetLevelProgress(user, settings), false));
+				.AddField("Progress to next level", Levels.GetLevelProgress(user, settings), false), true);
 		}
 	}
 }
