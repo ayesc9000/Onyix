@@ -40,7 +40,7 @@ namespace Onyix.Commands
 				.WithDescription("The level up message currently has the following values:")
 				.WithColor(Colors.Gray)
 				.AddField("Title", settings.LevelUpTitle)
-				.AddField("Description", settings.LevelUpMessage));
+				.AddField("Description", settings.LevelUpMessage), true);
 		}
 
 		[SlashCommand("title", "Change the level up message title", true)]
@@ -64,7 +64,7 @@ namespace Onyix.Commands
 				.WithTitle("Success")
 				.WithDescription("The changes were saved successfully.")
 				.WithColor(Colors.Green)
-				.AddField("New value", title));
+				.AddField("New value", title), true);
 		}
 
 		[SlashCommand("description", "Change the level up message description", true)]
@@ -88,7 +88,7 @@ namespace Onyix.Commands
 				.WithTitle("Success")
 				.WithDescription("The changes were saved successfully.")
 				.WithColor(Colors.Green)
-				.AddField("New value", desc));
+				.AddField("New value", desc), true);
 		}
 	}
 }
