@@ -46,11 +46,20 @@ namespace Onyix.Commands
 				return;
 			}
 
+			// Generate embed
+			DiscordEmbedBuilder embed = new DiscordEmbedBuilder()
+				.WithTitle("Level roles")
+				.WithDescription("Page x/x")
+				.WithColor(Colors.Gray);
+
+			// TODO: Add page system!
+			foreach (var role in settings.LevelRoles)
+			{
+				embed.AddField($"Level {role.Key}", $"<@&{role.Value}>", true);
+			}
+
 			// Reply
-			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
-				.WithTitle("List")
-				.WithDescription("This command is not finished. Try again later.")
-				.WithColor(Colors.Gray));
+			await ctx.CreateResponseAsync(embed, true);
 		}
 
 		[SlashCommand("assign", "Assign a role for a level", true)]
@@ -61,14 +70,22 @@ namespace Onyix.Commands
 			// Check if interaction occured in a guild
 			if (ctx.Guild is null) return;
 
-			// Get guild data
+			// Assign role
 			LevelSettings settings = Database.GetLevelSettings(ctx.Guild.Id);
+			settings.LevelRoles.Add(level, role.Id);
+
+			// Save changes
+			Database.StartTransaction();
+			Database.SetLevelSettings(settings);
+			Database.CommitTransaction();
 
 			// Reply
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
-				.WithTitle("Assign")
-				.WithDescription("This command is not finished. Try again later.")
-				.WithColor(Colors.Gray));
+				.WithTitle("Success")
+				.WithDescription("The changes were saved successfully.")
+				.WithColor(Colors.Green)
+				.AddField("Level", level.ToString())
+				.AddField("Role", role.Name), true);
 		}
 
 		[SlashCommand("remove", "Remove the assigned role for a level", true)]
@@ -81,11 +98,31 @@ namespace Onyix.Commands
 			// Get guild data
 			LevelSettings settings = Database.GetLevelSettings(ctx.Guild.Id);
 
+			// Check if level has assigned role
+			if (!settings.LevelRoles.ContainsKey(level))
+			{
+				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+					.WithTitle("Error")
+					.WithDescription("The specified level does not have any roles assigned to it.")
+					.WithColor(Colors.Red));
+
+				return;
+			}
+
+			// Remove role
+			settings.LevelRoles.Remove(level);
+
+			// Save changes
+			Database.StartTransaction();
+			Database.SetLevelSettings(settings);
+			Database.CommitTransaction();
+
 			// Reply
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
-				.WithTitle("Remove")
-				.WithDescription("This command is not finished. Try again later.")
-				.WithColor(Colors.Gray));
+				.WithTitle("Success")
+				.WithDescription("The changes were saved successfully.")
+				.WithColor(Colors.Green)
+				.AddField("Level", level.ToString()), true);
 		}
 
 		/// <summary>
