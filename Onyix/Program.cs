@@ -26,7 +26,6 @@ namespace Onyix
 {
 	public partial class Program
 	{
-		// TODO: Not a big fan of Program being static. See if I can make it instanced again.
 		private static string? version;
 		private static Bot? bot;
 		private static Logger? logs;

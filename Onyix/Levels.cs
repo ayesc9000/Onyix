@@ -31,7 +31,6 @@ namespace Onyix
 			UserLevel user = Database.GetUserLevel(e.Author.Id, e.Guild.Id);
 			LevelSettings settings = Database.GetLevelSettings(e.Guild.Id);
 
-			// TODO: Debug this
 			// Check if we can give XP right now
 			if ((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown) is not true) return;
 			
