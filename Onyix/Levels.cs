@@ -51,7 +51,7 @@ namespace Onyix
 				{
 					await e.Message.RespondAsync(new DiscordEmbedBuilder()
 						.WithTitle(settings.LevelUpTitle)
-						.WithDescription(settings.LevelUpMessage)
+						.WithDescription(settings.LevelUpContent)
 						.WithColor(Colors.Green));
 				}
 			}

@@ -40,7 +40,7 @@ namespace Onyix.Commands
 				.WithDescription("The level up message currently has the following values:")
 				.WithColor(Colors.Gray)
 				.AddField("Title", settings.LevelUpTitle)
-				.AddField("Description", settings.LevelUpMessage), true);
+				.AddField("Content", settings.LevelUpContent), true);
 		}
 
 		[SlashCommand("title", "Change the level up message title", true)]
@@ -64,19 +64,19 @@ namespace Onyix.Commands
 				.WithTitle("Success")
 				.WithDescription("The changes were saved successfully.")
 				.WithColor(Colors.Green)
-				.AddField("New value", title), true);
+				.AddField("Title", title), true);
 		}
 
-		[SlashCommand("description", "Change the level up message description", true)]
-		public async Task Description(InteractionContext ctx,
-			[Option("value", "The new message description")] string desc)
+		[SlashCommand("content", "Change the level up message content", true)]
+		public async Task Content(InteractionContext ctx,
+			[Option("value", "The new message content")] string desc)
 		{
 			// Check if interaction occured in a guild
 			if (ctx.Guild is null) return;
 
 			// Get guild data
 			LevelSettings settings = Database.GetLevelSettings(ctx.Guild.Id);
-			settings.LevelUpMessage = desc;
+			settings.LevelUpContent = desc;
 
 			// Save changes
 			Database.StartTransaction();
@@ -88,7 +88,7 @@ namespace Onyix.Commands
 				.WithTitle("Success")
 				.WithDescription("The changes were saved successfully.")
 				.WithColor(Colors.Green)
-				.AddField("New value", desc), true);
+				.AddField("Content", desc), true);
 		}
 	}
 }

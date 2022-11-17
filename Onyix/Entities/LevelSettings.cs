@@ -31,8 +31,8 @@ namespace Onyix.Entities
 		public int XpPerLevel { get; set; }
 		public int Cooldown { get; set; }
 		public string LevelUpTitle { get; set; }
-		public string LevelUpMessage { get; set; }
-		public Dictionary<int, ulong> LevelRoles { get; set; }
+		public string LevelUpContent { get; set; }
+		public Dictionary<long, ulong> LevelRoles { get; set; }
 
 		public LevelSettings()
 		{
@@ -45,7 +45,7 @@ namespace Onyix.Entities
 			Multiplier = 1;
 			Cooldown = 60;
 			LevelUpTitle = "Leveled Up!";
-			LevelUpMessage = "You have leveled up to level $$LVL!";
+			LevelUpContent = "You have leveled up to level $$LVL!";
 			LevelRoles = new();
 		}
 
@@ -60,7 +60,7 @@ namespace Onyix.Entities
 			Multiplier = 1;
 			Cooldown = 60;
 			LevelUpTitle = "Leveled Up!";
-			LevelUpMessage = "You have leveled up to level $$LVL!";
+			LevelUpContent = "You have leveled up to level $$LVL!";
 			LevelRoles = new();
 		}
 	}
