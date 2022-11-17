@@ -40,7 +40,7 @@ namespace Onyix.Commands
 				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 					.WithTitle("Locked")
 					.WithDescription("The channel has been locked.")
-					.WithColor(Colors.Green));
+					.WithColor(Colors.Green), true);
 			}
 			else
 			{
@@ -50,7 +50,7 @@ namespace Onyix.Commands
 				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 					.WithTitle("Unlocked")
 					.WithDescription("The channel has been unlocked.")
-					.WithColor(Colors.Green));
+					.WithColor(Colors.Green), true);
 			}
 		}
 	}
