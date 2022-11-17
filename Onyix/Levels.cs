@@ -19,6 +19,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Onyix.Entities;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Onyix
@@ -32,7 +33,7 @@ namespace Onyix
 			LevelSettings settings = Database.GetLevelSettings(e.Guild.Id);
 
 			// Check if we can give XP right now
-			if ((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown) is not true) return;
+			//if ((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown) is not true) return;
 			
 			// Give XP
 			user.XP += settings.XpPerMessage;
@@ -44,6 +45,15 @@ namespace Onyix
 			{
 				user.XP = 0;
 				user.Level++;
+
+				// Assign level roles
+				if (settings.LevelRoles.ContainsKey(user.Level))
+				{
+					DiscordRole role = e.Guild.GetRole(settings.LevelRoles[user.Level]);
+					DiscordMember member = await e.Guild.GetMemberAsync(e.Author.Id);
+
+					await member.GrantRoleAsync(role);
+				}
 
 				// Check if we can send level up message
 				if (settings.EnableLevelUpMessage)
