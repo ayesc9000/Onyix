@@ -71,6 +71,8 @@ namespace Onyix
 				Program.Logs.Error(e.Exception, e.ToString());
 				return Task.CompletedTask;
 			};
+
+			//client.CurrentApplication.GetAssetsAsync().Wait();
 		}
 
 		/// <summary>
