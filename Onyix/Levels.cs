@@ -32,6 +32,9 @@ namespace Onyix
 			UserLevel user = Database.GetUserLevel(e.Author.Id, e.Guild.Id);
 			LevelSettings settings = Database.GetLevelSettings(e.Guild.Id);
 
+			// Check if levels are enabled in this server
+			if (!settings.EnableLevels) return;
+
 			// Check if we can give XP right now
 			//if ((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown) is not true) return;
 			

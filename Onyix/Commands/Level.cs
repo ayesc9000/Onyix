@@ -49,6 +49,17 @@ namespace Onyix.Commands
 			UserLevel user = Database.GetUserLevel(target.Id, ctx.Guild.Id);
 			LevelSettings settings = Database.GetLevelSettings(ctx.Guild.Id);
 
+			// Check if levels are enabled in this server
+			if (!settings.EnableLevels)
+			{
+				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+					.WithTitle("Error")
+					.WithDescription("Levels are not enabled in this server.")
+					.WithColor(Colors.Red));
+
+				return;
+			}
+
 			// Reply with embed
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 				.WithTitle($"{target.Username}'s Level")
