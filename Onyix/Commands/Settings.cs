@@ -19,6 +19,8 @@ using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using Onyix.Entities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Onyix.Commands
@@ -78,7 +80,8 @@ namespace Onyix.Commands
 			}
 
 			[SlashCommand("roles", "Show a list of every level's assigned role", true)]
-			public static async Task Roles(InteractionContext ctx)
+			public static async Task Roles(InteractionContext ctx,
+				[Option("page", "The page number of the role list to display")] long page = 1)
 			{
 				// Check if interaction occured in a guild
 				if (ctx.Guild is null) return;
@@ -97,15 +100,28 @@ namespace Onyix.Commands
 					return;
 				}
 
+				// Calculate page system
+				const int itemcount = 10;
+				int pages = (int)Math.Ceiling(settings.LevelRoles.Count / (double)itemcount);
+
+				if (page > pages)
+					page = 1;
+
+				int start = (int)(itemcount * (page - 1));
+				int end = (itemcount * page) > settings.LevelRoles.Count
+					? settings.LevelRoles.Count
+					: (int)(itemcount * page);
+
 				// Generate embed
 				DiscordEmbedBuilder embed = new DiscordEmbedBuilder()
 					.WithTitle("Level roles")
-					.WithDescription("Page x/x")
+					.WithDescription($"Page {page}/{pages}")
 					.WithColor(Colors.Gray);
 
 				// TODO: Add page system!
-				foreach (var role in settings.LevelRoles)
+				for (int i = start; i < end; i++)
 				{
+					KeyValuePair<long, ulong> role = settings.LevelRoles.ElementAt(i);
 					embed.AddField($"Level {role.Key}", $"<@&{role.Value}>", true);
 				}
 
@@ -224,18 +240,6 @@ namespace Onyix.Commands
 					.WithDescription("The changes were saved successfully.")
 					.WithColor(Colors.Green)
 					.AddField("Content", desc), true);
-			}
-
-			/// <summary>
-			/// Calculate the amount of pages based on the amount of items
-			/// </summary>
-			/// <param name="count">Item count</param>
-			/// <returns>An integer representing the amount of pages needed to display the amount of items</returns>
-			private static int PageCount(int count)
-			{
-				// Note: the .0 is important here, since it causes .NET to
-				// calculate this as if it were a double instead of an int.
-				return (int)Math.Ceiling(count / 9.0);
 			}
 		}
 	}
