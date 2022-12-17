@@ -31,5 +31,4 @@ RUN dotnet publish "Onyix.csproj" -c Release -o /app/publish /p:UseAppHost=false
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN sudo apt-get
 ENTRYPOINT ["dotnet", "Onyix.dll"]
