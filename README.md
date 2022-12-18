@@ -57,21 +57,42 @@ Any changes to the boilerplate that do not conform to these requirements will no
 
 ## 2. Setting up the development environment
 
+**For MacOS/Linux users:**
+In order for the music system to work, the opus and libsodium libraries must be installed on your machine.
+
+Ubuntu 18+/Debian 10+:
+
+```shell
+sudo apt-get install libopus0 libopus-dev libsodium23 libsodium-dev
+```
+
+Ubuntu 16/Debian 9:
+
+```shell
+sudo apt-get install libopus0 libopus-dev libsodium18 libsodium-dev
+```
+
+MacOS:
+
+```shell
+brew install opus libsodium
+```
+
+These libraries are automatically downloaded through NuGet for Windows users.
+
 This repository requires .NET 7 with Visual Studio 2022 17.4 or better to function correctly.
 
-Everything should be pretty much ready to go right out of the box after you clone the repository to your machine.
-
-> Note: If you are getting tons of errors upon opening the solution for the first time, then run a full build of the solution first. This often resolves the issue.
+> Note: If you are getting tons of errors upon opening the solution for the first time, then run a full build of the solution. This often resolves the issue.
 
 When running in a debug build, Onyix will automatically load all of your user secrets as environment variables.
 
 To set user secrets, open a terminal in the same folder as the Onyix project file and use the following command:
 
-> Note: Onyix only uses user-secrets for debug builds. You must specify environment variables manually when running a production build.
-
 ```shell
 dotnet user-secrets set "NAME" "VALUE"
 ```
+
+> Note: Onyix only uses user-secrets for debug builds. You must specify environment variables manually when running a production build.
 
 ## 3. Docker usage
 

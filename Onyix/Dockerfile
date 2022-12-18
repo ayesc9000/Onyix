@@ -31,4 +31,5 @@ RUN dotnet publish "Onyix.csproj" -c Release -o /app/publish /p:UseAppHost=false
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN apt-get install libopus0 libopus-dev libsodium23 libsodium-dev
 ENTRYPOINT ["dotnet", "Onyix.dll"]
