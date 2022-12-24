@@ -4,3 +4,4 @@
 *.user
 Onyix/Data/Database.db
 Onyix/Data/Database-log.db
+/Visual Studio 2022/Visualizers
