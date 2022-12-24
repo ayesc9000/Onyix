@@ -66,7 +66,6 @@
 
   <!-- Windows build dependencies -->
   <ItemGroup Condition="'$(os)' == 'Windows_NT'">
-    <None Include="$(ProjectDir)Binaries/Windows/**" CopyToOutputDirectory="PreserveNewest" LinkBase="Binaries/Windows/" />
     <WindowsBinaries Include="$(ProjectDir)Binaries/Windows/*.*" />
   </ItemGroup>
 
@@ -77,24 +76,20 @@
 
   <!-- MacOS build dependencies -->
   <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
-    <None Include="$(ProjectDir)Binaries/MacOS/**" LinkBase="Binaries/MacOS/" CopyToOutputDirectory="PreserveNewest" />
     <MacOSBinaries Include="$(ProjectDir)Binaries/MacOS/*.*" />
   </ItemGroup>
 
-  <Target Name="CopyOSXDeps" AfterTargets="Build"
-          Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
+  <Target Name="CopyOSXDeps" AfterTargets="Build" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
     <Message Text="Copying MacOS dependencies" Importance="High" />
     <Copy SourceFiles="@(MacOSBinaries)" DestinationFolder="$(OutDir)" />
   </Target>
     
   <!-- Linux build dependencies -->
   <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
-    <None Include="$(ProjectDir)Binaries/Linux/**" LinkBase="Binaries/Linux/" CopyToOutputDirectory="PreserveNewest" />
     <LinuxBinaries Include="$(ProjectDir)Binaries/Linux/*.*" />
   </ItemGroup>
 
-  <Target Name="CopyLinuxDeps" AfterTargets="Build"
-          Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
+  <Target Name="CopyLinuxDeps" AfterTargets="Build" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
     <Message Text="Copying Linux dependencies" Importance="High" />
     <Copy SourceFiles="@(LinuxBinaries)" DestinationFolder="$(OutDir)" />
   </Target>

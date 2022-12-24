@@ -18,7 +18,12 @@
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.VoiceNext;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using System;
 using System.Threading.Tasks;
+using Onyix.Queue;
 
 namespace Onyix.Commands
 {
@@ -105,6 +110,35 @@ namespace Onyix.Commands
 					.WithDescription("Failed to disconnect from voice channel.")
 					.WithColor(Colors.Red), true);
 			}
+		}
+
+		[SlashCommand("play", "Play an audio file", true)]
+		public static async Task Play(InteractionContext ctx,
+			[Option("file", "The file to play")] string uri)
+		{
+			VoiceNextExtension voice = ctx.Client.GetVoiceNext();
+			VoiceNextConnection connection = voice.GetConnection(ctx.Guild);
+
+			// Check if Onyix is connected to a channel
+			if (connection is null)
+			{
+				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+					.WithTitle("Error")
+					.WithDescription("Onyix is not connected to a voice channel.")
+					.WithColor(Colors.Red), true);
+
+				return;
+			}
+
+			// Get queue
+			GuildQueue q = QueueManager.GetQueue(ctx.Guild.Id);
+			q.AddToQueue(uri);
+			q.Play(connection);
+
+			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+				.WithTitle("Now Playing")
+				.WithDescription("Now playing some audio.")
+				.WithColor(Colors.Green), true);
 		}
 	}
 }
