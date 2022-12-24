@@ -18,25 +18,28 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Common properties -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <UserSecretsId>02bb26d6-560d-4cbc-ac39-330d24171477</UserSecretsId>
-	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	  
-	<!-- The runtime arguments below are different for non-Windows platforms. Please uncomment the one
-	that applies to your development environment, and comment out the rest. -->
-	  
-	<!-- Windows -->
-	<DockerfileRunArguments>-v $(APPDATA)/Microsoft/UserSecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments>
-	  
-	<!-- MacOS/Linux
-	<DockerfileRunArguments>-v $(HOME)/.microsoft/usersecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments> -->
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
+  <!-- Windows properties -->
+  <PropertyGroup Condition="'$(os)' == 'Windows_NT'">
+    <DockerfileRunArguments>-v $(APPDATA)/Microsoft/UserSecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments>
+  </PropertyGroup>
+
+  <!-- MacOS/Linux properties -->
+  <PropertyGroup Condition="'$(os)' == 'UNIX'">
+    <DockerfileRunArguments>-v $(HOME)/.microsoft/usersecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments>
+  </PropertyGroup>
+
+  <!-- Packages -->
   <ItemGroup>
     <PackageReference Include="DSharpPlus" Version="4.2.0" />
     <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0" />
@@ -50,15 +53,50 @@
     <PackageReference Include="NLog.Extensions.Logging" Version="5.2.0" />
   </ItemGroup>
 
+  <!-- Ignored files -->
   <ItemGroup>
     <None Remove="Data\Database-log.db" />
     <None Remove="Data\Database.db" />
   </ItemGroup>
 
+  <!-- Common build dependencies -->
   <ItemGroup>
-    <None Update="Data\NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Data\NLog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
+  <!-- Windows build dependencies -->
+  <ItemGroup Condition="'$(os)' == 'Windows_NT'">
+    <None Include="$(ProjectDir)Binaries/Windows/**" CopyToOutputDirectory="PreserveNewest" LinkBase="Binaries/Windows/" />
+    <WindowsBinaries Include="$(ProjectDir)Binaries/Windows/*.*" />
+  </ItemGroup>
+
+  <Target Name="CopyWinDeps" AfterTargets="Build" Condition="'$(os)' == 'Windows_NT'">
+    <Message Text="Copying Windows dependencies" Importance="High" />
+    <Copy SourceFiles="@(WindowsBinaries)" DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <!-- MacOS build dependencies -->
+  <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
+    <None Include="$(ProjectDir)Binaries/MacOS/**" LinkBase="Binaries/MacOS/" CopyToOutputDirectory="PreserveNewest" />
+    <MacOSBinaries Include="$(ProjectDir)Binaries/MacOS/*.*" />
+  </ItemGroup>
+
+  <Target Name="CopyOSXDeps" AfterTargets="Build"
+          Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
+    <Message Text="Copying MacOS dependencies" Importance="High" />
+    <Copy SourceFiles="@(MacOSBinaries)" DestinationFolder="$(OutDir)" />
+  </Target>
+    
+  <!-- Linux build dependencies -->
+  <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
+    <None Include="$(ProjectDir)Binaries/Linux/**" LinkBase="Binaries/Linux/" CopyToOutputDirectory="PreserveNewest" />
+    <LinuxBinaries Include="$(ProjectDir)Binaries/Linux/*.*" />
+  </ItemGroup>
+
+  <Target Name="CopyLinuxDeps" AfterTargets="Build"
+          Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
+    <Message Text="Copying Linux dependencies" Importance="High" />
+    <Copy SourceFiles="@(LinuxBinaries)" DestinationFolder="$(OutDir)" />
+  </Target>
+    
 </Project>

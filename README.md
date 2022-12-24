@@ -96,21 +96,17 @@ dotnet user-secrets set "NAME" "VALUE"
 
 ## 3. Docker usage
 
+Onyix comes preconfigured to support debugging within a Docker container. This allows you to test your changes within a containerized environment before deployment.
+
 ### 3.1 Debugging within Docker on Windows
 
-Onyix comes preconfigured to support debugging within a Docker container for Windows users.
-
-Make sure Docker Desktop is already running in the background. In Visual Studio, open the Debug Target drop down, and select the Docker option. Begin debugging by either clicking the Start Debugging button, or by pressing F5.
+Start the Docker Desktop service if it is not already running. In Visual Studio, open the Debug Target drop down, and select the Docker option. Begin debugging by either clicking the Start Debugging button, or by pressing F5.
 
 ### 3.2 Debugging within Docker on MacOS or Linux
 
 > Important: This feature has not been tested, as I am unable to test it properly myself. It has been included in the hopes that it will be useful to others who may need it. 
 
-Onyix requires some slight configuration before you can begin debugging within a Docker container on non-Windows platforms.
-
-Open the Onyix project file, and locate `DockerfileRunArguments`. Documentation comments have been placed to help guide you through the changes you will need to make in order to allow your user secrets to be properly mounted.
-
-You can now begin debugging by opening a terminal in the same folder as the project file, and using the following command:
+Open a terminal in the Onyix project folder, and use the following shell command:
 
 ```shell
 dotnet run --launch-profile Docker
@@ -124,7 +120,7 @@ Make sure that Docker Desktop is already running. Open the Onyix project and loc
 
 **For everything else:**
 
-Make sure Docker Desktop is already running, if applicable. Open a terminal in the Onyix project file. Run the following command to begin building the image:
+Open a terminal in the Onyix project file, and run the following command to begin building the image:
 
 ```shell
 docker build
