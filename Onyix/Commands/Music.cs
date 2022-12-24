@@ -18,10 +18,6 @@
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.VoiceNext;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System;
 using System.Threading.Tasks;
 using Onyix.Queue;
 
