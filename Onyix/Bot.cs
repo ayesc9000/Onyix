@@ -18,6 +18,7 @@
 using DSharpPlus;
 using DSharpPlus.EventArgs;
 using DSharpPlus.SlashCommands;
+using DSharpPlus.VoiceNext;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using System;
@@ -31,6 +32,7 @@ namespace Onyix
 		private readonly ulong guild;
 		private readonly DiscordClient client;
 		private readonly SlashCommandsExtension commands;
+		private readonly VoiceNextExtension voicenext;
 
 		/// <summary>
 		/// Create a new client
@@ -65,6 +67,7 @@ namespace Onyix
 
 			// Setup slash commands
 			commands = client.UseSlashCommands();
+			voicenext = client.UseVoiceNext();
 
 			commands.SlashCommandErrored += (cmds, e) =>
 			{
