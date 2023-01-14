@@ -1,6 +1,7 @@
-﻿**/Onyix/bin
-**/Onyix/obj
-**/.vs
+﻿/Onyix/bin
+/Onyix/obj
+/.vs
+/Visual Studio 2022
 *.user
 Onyix/Data/Database.db
 Onyix/Data/Database-log.db
