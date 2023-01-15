@@ -108,7 +108,7 @@ namespace Onyix
 		/// <summary>
 		/// Register all application command modules
 		/// </summary>
-		private async void RegisterModules()
+		private void RegisterModules()
 		{
 			// Register new modules
 			commands.RegisterCommands(Assembly.GetExecutingAssembly(), guild != 0 ? guild : null);
