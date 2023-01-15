@@ -15,14 +15,15 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using LiteDB;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Onyix.Entities
 {
+	[Table("LevelSettings")]
 	public class LevelSettings
 	{
-		public ObjectId? Id { get; set; }
+		public int Id { get; set; }
 		public ulong GuildId { get; set; }
 		public bool EnableLevels { get; set; }
 		public bool EnableLevelUpMessage { get; set; }
@@ -34,24 +35,8 @@ namespace Onyix.Entities
 		public string LevelUpContent { get; set; }
 		public Dictionary<long, ulong> LevelRoles { get; set; }
 
-		public LevelSettings()
-		{
-			Id = null;
-			GuildId = 0;
-			EnableLevels = false;
-			EnableLevelUpMessage = true;
-			XpPerMessage = 15;
-			XpPerLevel = 270;
-			Multiplier = 1;
-			Cooldown = 60;
-			LevelUpTitle = "Leveled Up!";
-			LevelUpContent = "You have leveled up to level $$LVL!";
-			LevelRoles = new();
-		}
-
 		public LevelSettings(ulong guild)
 		{
-			Id = null;
 			GuildId = guild;
 			EnableLevels = false;
 			EnableLevelUpMessage = true;

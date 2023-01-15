@@ -15,14 +15,15 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using LiteDB;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Onyix.Entities
 {
+	[Table("UserLevel")]
 	public class UserLevel
 	{
-		public ObjectId? Id { get; set; }
+		public int Id { get; set; }
 		public ulong UserId { get; set; }
 		public ulong GuildId { get; set; }
 		public long XP { get; set; }
@@ -30,20 +31,8 @@ namespace Onyix.Entities
 		public long Level { get; set; }
 		public DateTime LastGain { get; set; }
 
-		public UserLevel()
-		{
-			Id = null;
-			UserId = 0;
-			GuildId = 0;
-			XP = 0;
-			TotalXP = 0;
-			Level = 0;
-			LastGain = DateTime.MinValue;
-		}
-
 		public UserLevel(ulong user, ulong guild)
 		{
-			Id = null;
 			UserId = user;
 			GuildId = guild;
 			XP = 0;
