@@ -9,13 +9,14 @@ The code is licensed under the GPL v3 license. Please refer to `LICENSE.md` for 
 ## 1. Development quick start
 
 Prerequisites:
- -  Visual Studio 2022 with .NET 7
 
-    -- OR --
+- Visual Studio 2022 with .NET 7
 
-    The .NET 7 SDK with your IDE of choice
+   -- OR --
 
- -  A MariaDB database for development use
+   The .NET 7 SDK with your IDE of choice
+
+- A MariaDB database for development use
 
 Clone the repository to your local machine, blah blah blah the usual.
 
@@ -30,9 +31,10 @@ For non-VS users, you can use `dotnet run --launch-profile Docker`.
 ## 2. Deploying container
 
 Prerequisites:
- -  Working development environment ([Development quick start](#1-development-quick-start))
- -  Docker Desktop (If using Visual Studio)
- -  Server with Docker and MariaDB
+
+- Working development environment ([Development quick start](#1-development-quick-start))
+- Docker Desktop (If using Visual Studio)
+- Server with Docker and MariaDB
 
 From the root of the Onyix project in Visual Studio, right-click the Dockerfile, and select `Build Docker Image`.
 
@@ -44,12 +46,8 @@ On your server, add a new container with the created image. The container must h
 
 ## 3. Environment variables
 
-| **Name** | **Optional** | **Purpose**             |
-| -------- | ------------ | ----------------------- |
-| TOKEN    | No           | Discord account token   |
-| GUILD    | Yes          | Debug guild ID          |
-| DBSERVER | No           | Database server address |
-| DBPORT   | No           | Database server port    |
-| DBUSER   | No           | Database username       |
-| DBPASS   | No           | Database password       |
-| DATABASE | No           | Database name           |
+| **Name** | **Optional** | **Purpose**                |
+| -------- | ------------ | -------------------------- |
+| TOKEN    | No           | Discord account token      |
+| GUILD    | Yes          | Debug guild ID             |
+| DATABASE | No           | Database connection string |
