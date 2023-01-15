@@ -20,7 +20,6 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -38,17 +37,15 @@ namespace Onyix
 		public Bot()
 		{
 			// Get debug guild
-			string? guildstr = Environment.GetEnvironmentVariable("GUILD");
-			guild = guildstr is not null ? ulong.Parse(guildstr) : 0;
-
+			ulong.TryParse(Variables.Guild, out guild);
+			
 			// Create client
 			client = new(new()
 			{
-				Token = Environment.GetEnvironmentVariable("TOKEN"),
+				Token = Variables.Token,
 				TokenType = TokenType.Bot,
 				Intents = DiscordIntents.AllUnprivileged | DiscordIntents.GuildMembers,
-				// FIXME: ILoggerFactory.AddNLog() is deprecated. Find a workaround.
-				LoggerFactory = new LoggerFactory().AddNLog()
+				LoggerFactory = LoggerFactory.Create(builder => builder.AddNLog())
 			});
 
 			client.Ready += (client, e) =>
