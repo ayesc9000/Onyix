@@ -2,125 +2,54 @@
 
 Onyix is an open-source general purpose Discord bot, written in C# using DSharpPlus.
 
-The code is licensed under the GPL v3 license. Please refer to `LICENSE.md` for more information. Contributors should read section 1 of this readme for more information regarding required boilerplate in source code.
+The code is licensed under the GPL v3 license. Please refer to `LICENSE.md` for more information. For contributing guidelines, please read `CONTRIBUTING.md`.
 
 ---
 
-**Table of contents:**
+## 1. Development quick start
 
-1. [Source code boilerplate](#1-source-code-boilerplate)
+Prerequisites:
+ -  Visual Studio 2022 with .NET 7
 
-2. [Setting up the development environment](#2-setting-up-the-development-environment)
+    -- OR --
 
-3. [Docker usage](#3-docker-usage)
-   
-   3.1 [Debugging within Docker on Windows](#31-debugging-within-docker-on-windows)
-   
-   3.2 [Debugging within Docker on MacOS or Linux](#32-debugging-within-docker-on-macos-or-linux)
-   
-   3.3 [Building a release image](#33-building-a-release-image)
+    The .NET 7 SDK with your IDE of choice
 
-4. [Environment variables](#4-environment-variables)
+ -  A MariaDB database for development use
 
-5. [Embed colours](#5-embed-colours)
+Clone the repository to your local machine, blah blah blah the usual.
 
-## 1. Source code boilerplate
+Open a terminal from the Onyix project directory and enter your Discord token, database login, and development guild ID into the project user secrets with `dotnet user-secrets set "NAME" "VALUE"`.
 
-All source files in this repository should include boilerplate for the GPL v3 license. A template for this is included below:
+You can refer to [Environment variables](#3-environment-variables) for a complete list of all variables and their purpose.
 
-```csharp
-/* Onyix - An open-source Discord bot
- * Copyright (C) 2022 Liam "AyesC" Hogan
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see http://www.gnu.org/licenses/.
- */
-```
+You can debug both on your local machine or from within a Docker container. To debug within a container, select the Docker debug target from within Visual Studio.
 
-You may modify these aspects of the boilerplate:
+For non-VS users, you can use `dotnet run --launch-profile Docker`.
 
-- The copyright date
+## 2. Deploying container
 
-- The commenting syntax
+Prerequisites:
+ -  Working development environment ([Development quick start](#1-development-quick-start))
+ -  Docker Desktop (If using Visual Studio)
+ -  Server with Docker and MariaDB
 
-Any changes to the boilerplate that do not conform to these requirements will not be accepted.
+From the root of the Onyix project in Visual Studio, right-click the Dockerfile, and select `Build Docker Image`.
 
-## 2. Setting up the development environment
+For non-VS users, you can run `docker build` from within the project directory.
 
-This repository requires .NET 7 with Visual Studio 2022 17.4 or better to function correctly.
+> Note: Visual Studio will fail to build the Docker image if Docker Desktop is not running.
 
-Everything should be pretty much ready to go right out of the box after you clone the repository to your machine.
+On your server, add a new container with the created image. The container must have a Discord token and database login specified in the environment variables. Your development guild ID should not be included. Refer to [Environment variables](#3-environment-variables) for a complete list of all variables.
 
-> Note: If you are getting tons of errors upon opening the solution for the first time, then run a full build of the solution first. This often resolves the issue.
+## 3. Environment variables
 
-When running in a debug build, Onyix will automatically load all of your user secrets as environment variables.
-
-To set user secrets, open a terminal in the same folder as the Onyix project file and use the following command:
-
-> Note: Onyix only uses user-secrets for debug builds. You must specify environment variables manually when running a production build.
-
-```shell
-dotnet user-secrets set "NAME" "VALUE"
-```
-
-## 3. Docker usage
-
-### 3.1 Debugging within Docker on Windows
-
-Onyix comes preconfigured to support debugging within a Docker container for Windows users.
-
-Make sure Docker Desktop is already running in the background. In Visual Studio, open the Debug Target drop down, and select the Docker option. Begin debugging by either clicking the Start Debugging button, or by pressing F5.
-
-### 3.2 Debugging within Docker on MacOS or Linux
-
-> Important: This feature has not been tested, as I am unable to test it properly myself. It has been included in the hopes that it will be useful to others who may need it. 
-
-Onyix requires some slight configuration before you can begin debugging within a Docker container on non-Windows platforms.
-
-Open the Onyix project file, and locate `DockerfileRunArguments`. Documentation comments have been placed to help guide you through the changes you will need to make in order to allow your user secrets to be properly mounted.
-
-You can now begin debugging by opening a terminal in the same folder as the project file, and using the following command:
-
-```shell
-dotnet run --launch-profile Docker
-```
-
-### 3.3 Building a release image
-
-**For Visual Studio:**
-
-Make sure that Docker Desktop is already running. Open the Onyix project and locate the `dockerfile` at the root of the project. Right click the file, and select "Build Docker Image"
-
-**For everything else:**
-
-Make sure Docker Desktop is already running, if applicable. Open a terminal in the Onyix project file. Run the following command to begin building the image:
-
-```shell
-docker build
-```
-
-## 4. Environment variables
-
-| **Variable name** | **Purpose**                                                                       |
-| ----------------- | --------------------------------------------------------------------------------- |
-| TOKEN             | The Discord account that Onyix should log in to.                                  |
-| GUILD             | The ID of the Discord guild to push slash commands to when running a debug build. |
-
-## 5. Embed colours
-
-| Colour name | Hex value | Use case or purpose           |
-| ----------- | --------- | ----------------------------- |
-| Gray        | `#606266` | General information           |
-| Green       | `#32a852` | Success or command completion |
-| Yellow      | `#edbc28` | Warning or low-priority error |
-| Red         | `#e83c3c` | High priority error           |
+| **Name** | **Optional** | **Purpose**             |
+| -------- | ------------ | ----------------------- |
+| TOKEN    | No           | Discord account token   |
+| GUILD    | Yes          | Debug guild ID          |
+| DBSERVER | No           | Database server address |
+| DBPORT   | No           | Database server port    |
+| DBUSER   | No           | Database username       |
+| DBPASS   | No           | Database password       |
+| DATABASE | No           | Database name           |
