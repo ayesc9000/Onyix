@@ -17,6 +17,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Onyix.Entities;
+using Onyix.Exceptions;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -43,7 +44,16 @@ namespace Onyix
 		{
 			// Get dbset and query expression
 			DbSet<T> set = Set<T>();
-			T? ent = set.SingleOrDefault(exp);
+			T? ent;
+
+			try
+			{
+				ent = set.SingleOrDefault(exp);
+			}
+			catch (InvalidOperationException)
+			{
+				throw new DatabaseResultException("There is more than one row in this table with the same index value!");
+			}
 
 			return ent;
 		}
