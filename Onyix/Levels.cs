@@ -29,14 +29,24 @@ namespace Onyix
 		{
 			// Get guild settings
 			LevelSettings? settings = db.FindOne<LevelSettings>(s => s.GuildId == e.Guild.Id);
-			settings ??= new LevelSettings(e.Guild.Id);
+
+			if (settings is null)
+			{
+				settings = new LevelSettings(e.Guild.Id);
+				db.Add(settings);
+			}
 
 			// Check if levels are enabled in this server
 			if (!settings.EnableLevels) return;
 
 			// Get user level
 			UserLevel? user = db.FindOne<UserLevel>(s => s.GuildId == e.Guild.Id);
-			user ??= new UserLevel(e.Author.Id, e.Guild.Id);
+
+			if (user is null)
+			{
+				user = new UserLevel(e.Author.Id, e.Guild.Id);
+				db.Add(user);
+			}
 
 			// Check if we can give XP right now
 			//if ((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown) is not true) return;
@@ -72,8 +82,6 @@ namespace Onyix
 			}
 
 			// Commit data to database
-			// Note: Update is only needed if the entity is not being tracked
-			//db.Update(user);
 			db.SaveChanges();
 		}
 
