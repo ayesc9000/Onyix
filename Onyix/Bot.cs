@@ -30,6 +30,7 @@ namespace Onyix
 		private readonly ulong guild;
 		private readonly DiscordClient client;
 		private readonly SlashCommandsExtension commands;
+		private readonly Database database;
 
 		/// <summary>
 		/// Create a new client
@@ -37,9 +38,10 @@ namespace Onyix
 		public Bot()
 		{
 			// Get debug guild
-			ulong.TryParse(Variables.Guild, out guild);
+			// TryParse already outputs 0 on failure; no need for us to do anything
+			_ = ulong.TryParse(Variables.Guild, out guild);
 			
-			// Create client
+			// Create clients
 			client = new(new()
 			{
 				Token = Variables.Token,
@@ -70,6 +72,9 @@ namespace Onyix
 			};
 
 			//client.CurrentApplication.GetAssetsAsync().Wait();
+
+			// Start database
+			database = new();
 		}
 
 		/// <summary>
@@ -78,8 +83,8 @@ namespace Onyix
 		public async Task Start()
 		{
 			// Initialize
-			Database.Initialize();
-			RegisterModules();
+			commands.RegisterCommands(Assembly.GetExecutingAssembly(), guild != 0 ? guild : null);
+			Program.Logs.Info("Registered assembly modules");
 
 			// Connect to Discord
 			await client.ConnectAsync();
@@ -106,18 +111,13 @@ namespace Onyix
 		}
 
 		/// <summary>
-		/// Register all application command modules
-		/// </summary>
-		private void RegisterModules()
-		{
-			// Register new modules
-			commands.RegisterCommands(Assembly.GetExecutingAssembly(), guild != 0 ? guild : null);
-			Program.Logs.Info("Registered assembly modules");
-		}
-
-		/// <summary>
 		/// Returns the Discord socket client
 		/// </summary>
 		public DiscordClient Client => client;
+
+		/// <summary>
+		/// Get the database instance for this client
+		/// </summary>
+		public Database Database => database;
 	}
 }
