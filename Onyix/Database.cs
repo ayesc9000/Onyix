@@ -18,6 +18,8 @@
 using Microsoft.EntityFrameworkCore;
 using Onyix.Entities;
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Onyix
 {
@@ -35,6 +37,15 @@ namespace Onyix
 				throw new Exception("Database connection string missing");
 
 			options.UseMySql(ServerVersion.AutoDetect(connection));
+		}
+
+		public T? FindOne<T>(Expression<Func<T, bool>> exp) where T : class
+		{
+			// Get dbset and query expression
+			DbSet<T> set = Set<T>();
+			T? ent = set.SingleOrDefault(exp);
+
+			return ent;
 		}
 	}
 }
