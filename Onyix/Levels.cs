@@ -72,8 +72,8 @@ namespace Onyix
 			}
 
 			// Commit data to database
-			// TODO: Double check this
-			db.Update(user);
+			// Note: Update is only needed if the entity is not being tracked
+			//db.Update(user);
 			db.SaveChanges();
 		}
 
