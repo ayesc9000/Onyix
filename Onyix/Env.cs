@@ -15,26 +15,22 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using Microsoft.EntityFrameworkCore;
-using Onyix.Entities;
 using System;
 
 namespace Onyix
 {
-	public class Database : DbContext
+	public static class Env
 	{
-		public DbSet<LevelSettings>? LevelSettings { get; set; }
-		public DbSet<UserKarma>? UserKarma { get; set; }
-		public DbSet<UserLevel>? UserLevel { get; set; }
+		/*
+		 * These are environment variables that are loaded
+		 * at runtime.
+		 * 
+		 * Any data that needs to be loaded from the command
+		 * line should go in here.
+		 */
 
-		protected override void OnConfiguring(DbContextOptionsBuilder options)
-		{
-			string? connection = Env.Database;
-
-			if (connection is null)
-				throw new Exception("Database connection string missing");
-
-			options.UseMySql(ServerVersion.AutoDetect(connection));
-		}
+		public static string? Token => Environment.GetEnvironmentVariable("TOKEN");
+		public static string? Guild => Environment.GetEnvironmentVariable("GUILD");
+		public static string? Database => Environment.GetEnvironmentVariable("DATABASE");
 	}
 }

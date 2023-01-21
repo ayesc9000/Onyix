@@ -39,12 +39,12 @@ namespace Onyix
 		{
 			// Get debug guild
 			// TryParse already outputs 0 on failure; no need for us to do anything
-			_ = ulong.TryParse(Variables.Guild, out guild);
+			_ = ulong.TryParse(Env.Guild, out guild);
 			
 			// Create clients
 			client = new(new()
 			{
-				Token = Variables.Token,
+				Token = Env.Token,
 				TokenType = TokenType.Bot,
 				Intents = DiscordIntents.AllUnprivileged | DiscordIntents.GuildMembers,
 				LoggerFactory = LoggerFactory.Create(builder => builder.AddNLog())
