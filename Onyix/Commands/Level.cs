@@ -45,11 +45,16 @@ namespace Onyix.Commands
 				return;
 			}
 
-			// Get user information
-			UserLevel user = Database.GetUserLevel(target.Id, ctx.Guild.Id);
-			LevelSettings settings = Database.GetLevelSettings(ctx.Guild.Id);
+			// Get guild settings
+			/*LevelSettings? settings = db.FindOne<LevelSettings>(s => s.GuildId == ctx.Guild.Id);
 
-			// Check if levels are enabled in this server
+			if (settings is null)
+			{
+				settings = new LevelSettings(ctx.Guild.Id);
+				db.Add(settings);
+			}*/
+
+			// Check if levels are enabled in this guild
 			if (!settings.EnableLevels)
 			{
 				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
@@ -59,6 +64,15 @@ namespace Onyix.Commands
 
 				return;
 			}
+
+			// Get user level
+			/*UserLevel? user = db.FindOne<UserLevel>(s => s.GuildId == ctx.Guild.Id);
+
+			if (user is null)
+			{
+				user = new UserLevel(ctx.User.Id, ctx.Guild.Id);
+				db.Add(user);
+			}*/
 
 			// Reply with embed
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()

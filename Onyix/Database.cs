@@ -27,7 +27,9 @@ namespace Onyix
 	public class Database : DbContext
 	{
 		public DbSet<LevelSettings>? LevelSettings { get; set; }
+
 		public DbSet<UserKarma>? UserKarma { get; set; }
+
 		public DbSet<UserLevel>? UserLevel { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder options)

@@ -36,7 +36,7 @@ namespace Onyix
 				db.Add(settings);
 			}
 
-			// Check if levels are enabled in this server
+			// Check if levels are enabled in this guild
 			if (!settings.EnableLevels) return;
 
 			// Get user level
@@ -63,9 +63,9 @@ namespace Onyix
 				user.Level++;
 
 				// Assign level roles
-				if (settings.LevelRoles.ContainsKey(user.Level))
+				if (settings.LevelRoles.TryGetValue(user.Level, out ulong value))
 				{
-					DiscordRole role = e.Guild.GetRole(settings.LevelRoles[user.Level]);
+					DiscordRole role = e.Guild.GetRole(value);
 					DiscordMember member = await e.Guild.GetMemberAsync(e.Author.Id);
 
 					await member.GrantRoleAsync(role);
