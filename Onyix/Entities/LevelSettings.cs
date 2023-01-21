@@ -1,5 +1,5 @@
 ﻿/* Onyix - An open-source Discord bot
- * Copyright (C) 2022 Liam "AyesC" Hogan
+ * Copyright (C) 2023 Liam "AyesC" Hogan
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,24 +15,34 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Onyix.Entities
 {
-	[Table("LevelSettings")]
+	[Index(nameof(GuildId), IsUnique = true)]
 	public class LevelSettings
 	{
 		public int Id { get; set; }
+
 		public ulong GuildId { get; set; }
+
 		public bool EnableLevels { get; set; }
+
 		public bool EnableLevelUpMessage { get; set; }
+
 		public double Multiplier { get; set; }
+
 		public int XpPerMessage { get; set; }
+
 		public int XpPerLevel { get; set; }
+
 		public int Cooldown { get; set; }
+
 		public string LevelUpTitle { get; set; }
+
 		public string LevelUpContent { get; set; }
+
 		public Dictionary<long, ulong> LevelRoles { get; set; }
 
 		public LevelSettings(ulong guild)

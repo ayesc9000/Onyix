@@ -1,5 +1,5 @@
 ﻿/* Onyix - An open-source Discord bot
- * Copyright (C) 2022 Liam "AyesC" Hogan
+ * Copyright (C) 2023 Liam "AyesC" Hogan
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,25 @@
  */
 
 
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Onyix.Entities
 {
-	[Table("UserKarma")]
+	[Index(nameof(UserId), IsUnique = true)]
 	public class UserKarma
 	{
 		public int Id { get; set; }
+
 		public ulong UserId { get; set; }
+
 		public long Upvotes { get; set; }
+
 		public long Downvotes { get; set; }
+
 		public long Awards { get; set; }
+
 		public long Posts { get; set; }
+
 		public long Removed { get; set; }
 
 		public UserKarma(ulong user)
