@@ -19,25 +19,28 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Onyix.Entities;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Onyix
 {
 	public static class Levels
 	{
-		public static async Task GiveXPAsync(MessageCreateEventArgs e)
+		public static async Task GiveXPAsync(MessageCreateEventArgs e, Database db)
 		{
-			// Get the user and server data
-			UserLevel user = Database.GetUserLevel(e.Author.Id, e.Guild.Id);
-			LevelSettings settings = Database.GetLevelSettings(e.Guild.Id);
+			// Get guild settings
+			LevelSettings? settings = db.FindOne<LevelSettings>(s => s.GuildId == e.Guild.Id);
+			settings ??= new LevelSettings(e.Guild.Id);
 
 			// Check if levels are enabled in this server
 			if (!settings.EnableLevels) return;
 
+			// Get user level
+			UserLevel? user = db.FindOne<UserLevel>(s => s.GuildId == e.Guild.Id);
+			user ??= new UserLevel(e.Author.Id, e.Guild.Id);
+
 			// Check if we can give XP right now
 			//if ((DateTime.Now - user.LastGain) >= TimeSpan.FromSeconds(settings.Cooldown) is not true) return;
-			
+
 			// Give XP
 			user.XP += settings.XpPerMessage;
 			user.TotalXP += settings.XpPerMessage;
@@ -69,9 +72,9 @@ namespace Onyix
 			}
 
 			// Commit data to database
-			Database.StartTransaction();
-			Database.SetUserLevel(user);
-			Database.CommitTransaction();
+			// TODO: Double check this
+			db.Update(user);
+			db.SaveChanges();
 		}
 
 		public static double GetMultiplier(long level, double multipler)
@@ -82,7 +85,7 @@ namespace Onyix
 		public static string GetLevelProgress(UserLevel user, LevelSettings settings)
 		{
 			long current = user.XP;
-			double total = settings.XpPerLevel * Levels.GetMultiplier(user.Level, settings.Multiplier);
+			double total = settings.XpPerLevel * GetMultiplier(user.Level, settings.Multiplier);
 
 			return current + "/" + total;
 		}

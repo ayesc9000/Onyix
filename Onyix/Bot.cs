@@ -107,7 +107,7 @@ namespace Onyix
 		private async Task MessageCreated(MessageCreateEventArgs e)
 		{
 			if (e.Author.IsBot) return;
-			await Levels.GiveXPAsync(e);
+			await Levels.GiveXPAsync(e, database);
 		}
 
 		/// <summary>
