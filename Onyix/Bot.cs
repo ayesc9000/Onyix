@@ -33,7 +33,7 @@ namespace Onyix
 		private readonly Database database;
 
 		/// <summary>
-		/// Create a new client
+		/// Initialize a new bot client
 		/// </summary>
 		public Bot()
 		{
