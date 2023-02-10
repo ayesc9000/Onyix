@@ -1,6 +1,6 @@
 ﻿<!--
  Onyix - An open-source Discord bot
- Copyright (C) 2022 Liam "AyesC" Hogan
+ Copyright (C) 2023 Liam "AyesC" Hogan
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -9,7 +9,7 @@
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
@@ -26,6 +26,9 @@
 	<AssemblyVersion>1.0.0.0</AssemblyVersion>
     <UserSecretsId>02bb26d6-560d-4cbc-ac39-330d24171477</UserSecretsId>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	<EnableNETAnalyzers>True</EnableNETAnalyzers>
+	<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 	  
 	<!-- The runtime arguments below are different for non-Windows platforms. Please uncomment the one
 	that applies to your development environment, and comment out the rest. -->
@@ -46,6 +49,10 @@
     <PackageReference Include="NLog" Version="5.1.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.2.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+	<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+	</PackageReference>
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿/* Onyix - An open-source Discord bot
- * Copyright (C) 2022 Liam "AyesC" Hogan
+ * Copyright (C) 2023 Liam "AyesC" Hogan
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,18 +19,17 @@ using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using System.Threading.Tasks;
 
-namespace Onyix.Commands
+namespace Onyix.Commands;
+
+public class AboutCommand : ApplicationCommandModule
 {
-	public class AboutCommand : ApplicationCommandModule
-	{		
-		[SlashCommand("about", "Displays information about the bot.", true)]
-		public async Task Execute(InteractionContext ctx)
-		{
-			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
-				.WithTitle("About Onyix")
-				.WithDescription("Onyix is a Discord bot that provides a variety of commands and tools for users and admins.")
-				.WithColor(Colors.Gray)
-				.WithThumbnail(ctx.Client.CurrentUser.AvatarUrl));
-		}
+	[SlashCommand("about", "Displays information about the bot.", true)]
+	public async Task Execute(InteractionContext ctx)
+	{
+		await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
+			.WithTitle("About Onyix")
+			.WithDescription("Onyix is a Discord bot that provides a variety of commands and tools for users and admins.")
+			.WithColor(Colors.Gray)
+			.WithThumbnail(ctx.Client.CurrentUser.AvatarUrl));
 	}
 }

@@ -1,5 +1,5 @@
 ﻿/* Onyix - An open-source Discord bot
- * Copyright (C) 2022 Liam "AyesC" Hogan
+ * Copyright (C) 2023 Liam "AyesC" Hogan
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,71 +22,65 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Onyix
+namespace Onyix;
+
+public partial class Program
 {
-	public partial class Program
+	/// <summary>
+	/// Main entry point
+	/// </summary>
+	public static Task Main()
 	{
-		private static string? version;
-		private static Bot? bot;
-		private static Logger? logs;
+		// Get version string
+		// TODO: See if this can be simplified
+		Assembly? asm = Assembly.GetEntryAssembly();
 
-		/// <summary>
-		/// Main entry point
-		/// </summary>
-		/// <param name="args">Command-line arguments</param>
-		public static Task Main(string[] args)
+		if (asm is not null)
 		{
-			// Get version string
-			// TODO: See if this can be simplified
-			Assembly? asm = Assembly.GetEntryAssembly();
+			Version? ver = asm.GetName().Version;
 
-			if (asm is not null)
-			{
-				Version? ver = asm.GetName().Version;
-
-				if (ver is not null)
-					version = ver.ToString();
-			}
-
-			// Configure NLog
-			logs = LogManager.GetCurrentClassLogger();
-			LogManager.Configuration = new XmlLoggingConfiguration(Paths.NLog);
-
-#if DEBUG
-			// Load environment variables from user secrets if we are in a debug build
-			ConfigurationBuilder builder = new();
-			builder.AddUserSecrets<Program>();
-			IConfigurationRoot config = builder.Build();
-
-			foreach (IConfigurationSection child in config.GetChildren())
-				Environment.SetEnvironmentVariable(child.Key, child.Value);
-
-			Logs.Info("Loaded user secrets into environment variables");
-#endif
-
-			// Create bot and database
-			Logs.Info("Onyix version " + Version);
-			bot = new();
-
-			// Start bot
-			return bot.Start();
+			if (ver is not null)
+				Version = ver.ToString();
 		}
 
-		// TODO: Possible null references on getters below.
+		// Configure NLog
+		Logs = LogManager.GetCurrentClassLogger();
+		LogManager.Configuration = new XmlLoggingConfiguration(Paths.NLog);
 
-		/// <summary>
-		/// Get the version string
-		/// </summary>
-		public static string Version => version;
+#if DEBUG
+		// Load environment variables from user secrets if we are in a debug build
+		ConfigurationBuilder builder = new();
+		builder.AddUserSecrets<Program>();
+		IConfigurationRoot config = builder.Build();
 
-		/// <summary>
-		/// Get the bot instance
-		/// </summary>
-		public static Bot Bot => bot;
+		foreach (IConfigurationSection child in config.GetChildren())
+			Environment.SetEnvironmentVariable(child.Key, child.Value);
 
-		/// <summary>
-		/// Get the NLog logger
-		/// </summary>
-		public static Logger Logs => logs;
+		Logs.Info("Loaded user secrets into environment variables");
+#endif
+
+		// Create bot and database
+		Logs.Info("Onyix version " + Version);
+		Bot = new();
+
+		// Start bot
+		return Bot.Start();
 	}
+
+	// TODO: Possible null references on getters below.
+
+	/// <summary>
+	/// Get the version string
+	/// </summary>
+	public static string Version { get; private set; }
+
+	/// <summary>
+	/// Get the bot instance
+	/// </summary>
+	public static Bot Bot { get; private set; }
+
+	/// <summary>
+	/// Get the NLog logger
+	/// </summary>
+	public static Logger Logs { get; private set; }
 }

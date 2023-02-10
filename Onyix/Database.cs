@@ -1,5 +1,5 @@
 ﻿/* Onyix - An open-source Discord bot
- * Copyright (C) 2022 Liam "AyesC" Hogan
+ * Copyright (C) 2023 Liam "AyesC" Hogan
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -8,13 +8,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
-
 using Microsoft.EntityFrameworkCore;
 using Onyix.Entities;
 using Onyix.Exceptions;
@@ -22,42 +21,39 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Onyix
+namespace Onyix;
+
+public class Database : DbContext
 {
-	public class Database : DbContext
+	public DbSet<LevelSettings>? LevelSettings { get; set; }
+	public DbSet<UserKarma>? UserKarma { get; set; }
+	public DbSet<UserLevel>? UserLevel { get; set; }
+
+	protected override void OnConfiguring(DbContextOptionsBuilder options)
 	{
-		public DbSet<LevelSettings>? LevelSettings { get; set; }
+		string? connection = Env.Database;
 
-		public DbSet<UserKarma>? UserKarma { get; set; }
+		if (connection is null)
+			throw new Exception("Database connection string missing");
 
-		public DbSet<UserLevel>? UserLevel { get; set; }
+		options.UseMySql(ServerVersion.AutoDetect(connection));
+	}
 
-		protected override void OnConfiguring(DbContextOptionsBuilder options)
+	public T? FindOne<T>(Expression<Func<T, bool>> exp) where T : class
+	{
+		// Get dbset and query expression
+		DbSet<T> set = Set<T>();
+		T? ent;
+
+		try
 		{
-			string? connection = Env.Database;
-
-			if (connection is null)
-				throw new Exception("Database connection string missing");
-
-			options.UseMySql(ServerVersion.AutoDetect(connection));
+			ent = set.SingleOrDefault(exp);
+		}
+		catch (InvalidOperationException)
+		{
+			throw new DatabaseResultException("There is more than one row in this table with the same index value!");
 		}
 
-		public T? FindOne<T>(Expression<Func<T, bool>> exp) where T : class
-		{
-			// Get dbset and query expression
-			DbSet<T> set = Set<T>();
-			T? ent;
-
-			try
-			{
-				ent = set.SingleOrDefault(exp);
-			}
-			catch (InvalidOperationException)
-			{
-				throw new DatabaseResultException("There is more than one row in this table with the same index value!");
-			}
-
-			return ent;
-		}
+		return ent;
 	}
 }
