@@ -14,29 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using NLog;
 using Onyix.Entities;
 using Onyix.Exceptions;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Onyix;
+namespace Onyix.Services;
 
-public class Database : DbContext
+public class DatabaseService : DbContext
 {
+	private readonly IConfigurationRoot config;
+	private readonly Logger logger; 
+
 	public DbSet<LevelSettings>? LevelSettings { get; set; }
 	public DbSet<UserKarma>? UserKarma { get; set; }
 	public DbSet<UserLevel>? UserLevel { get; set; }
 
+	public DatabaseService(IServiceProvider s)
+	{
+		config = s.GetRequiredService<IConfigurationRoot>();
+		logger = s.GetRequiredService<Logger>();
+	}
+
 	protected override void OnConfiguring(DbContextOptionsBuilder options)
 	{
-		string? connection = Env.Database;
-
-		if (connection is null)
-			throw new Exception("Database connection string missing");
-
-		options.UseMySql(ServerVersion.AutoDetect(connection));
+		options.UseMySql(ServerVersion.AutoDetect(config["DATABASE"]));
+		logger.Info("Database started");
 	}
 
 	public T? FindOne<T>(Expression<Func<T, bool>> exp) where T : class
