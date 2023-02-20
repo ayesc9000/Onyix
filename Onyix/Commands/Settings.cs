@@ -15,7 +15,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using DSharpPlus.Entities;
+/*using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using Onyix.Entities;
 using System;
@@ -244,3 +244,4 @@ namespace Onyix.Commands
 		}
 	}
 }
+*/
