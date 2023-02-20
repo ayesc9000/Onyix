@@ -15,12 +15,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using Microsoft.Extensions.Configuration;
-using NLog;
-using NLog.Config;
 using System;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Onyix;
 
@@ -29,58 +24,15 @@ public partial class Program
 	/// <summary>
 	/// Main entry point
 	/// </summary>
-	public static Task Main()
+	public static void Main()
 	{
-		// Get version string
-		// TODO: See if this can be simplified
-		Assembly? asm = Assembly.GetEntryAssembly();
-
-		if (asm is not null)
+		try
 		{
-			Version? ver = asm.GetName().Version;
-
-			if (ver is not null)
-				Version = ver.ToString();
+			new Bot().StartAsync().GetAwaiter().GetResult();
 		}
-
-		// Configure NLog
-		Logs = LogManager.GetCurrentClassLogger();
-		LogManager.Configuration = new XmlLoggingConfiguration(Paths.NLog);
-
-#if DEBUG
-		// Load environment variables from user secrets if we are in a debug build
-		ConfigurationBuilder builder = new();
-		builder.AddUserSecrets<Program>();
-		IConfigurationRoot config = builder.Build();
-
-		foreach (IConfigurationSection child in config.GetChildren())
-			Environment.SetEnvironmentVariable(child.Key, child.Value);
-
-		Logs.Info("Loaded user secrets into environment variables");
-#endif
-
-		// Create bot and database
-		Logs.Info("Onyix version " + Version);
-		Bot = new();
-
-		// Start bot
-		return Bot.Start();
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.Message);
+		}
 	}
-
-	// TODO: Possible null references on getters below.
-
-	/// <summary>
-	/// Get the version string
-	/// </summary>
-	public static string Version { get; private set; }
-
-	/// <summary>
-	/// Get the bot instance
-	/// </summary>
-	public static Bot Bot { get; private set; }
-
-	/// <summary>
-	/// Get the NLog logger
-	/// </summary>
-	public static Logger Logs { get; private set; }
 }

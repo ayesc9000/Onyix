@@ -17,7 +17,9 @@
 
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Microsoft.Extensions.DependencyInjection;
 using Onyix.Entities;
+using Onyix.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -25,10 +27,10 @@ namespace Onyix
 {
 	public static class Levels
 	{
-		public static async Task GiveXPAsync(MessageCreateEventArgs e, Database db)
+		public static async Task GiveXPAsync(MessageCreateEventArgs e, ServiceProvider s)
 		{
 			// Get guild settings
-			LevelSettings? settings = db.FindOne<LevelSettings>(s => s.GuildId == e.Guild.Id);
+			/*LevelSettings? settings = db.FindOne<LevelSettings>(s => s.GuildId == e.Guild.Id);
 
 			if (settings is null)
 			{
@@ -82,7 +84,7 @@ namespace Onyix
 			}
 
 			// Commit data to database
-			db.SaveChanges();
+			db.SaveChanges();*/
 		}
 
 		public static double GetMultiplier(long level, double multipler)

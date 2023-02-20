@@ -29,26 +29,28 @@
 	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	<EnableNETAnalyzers>True</EnableNETAnalyzers>
 	<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-	  
-	<!-- The runtime arguments below are different for non-Windows platforms. Please uncomment the one
-	that applies to your development environment, and comment out the rest. -->
-	  
-	<!-- Windows -->
-	<DockerfileRunArguments>-v $(APPDATA)/Microsoft/UserSecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments>
-	  
-	<!-- MacOS/Linux
-	<DockerfileRunArguments>-v $(HOME)/.microsoft/usersecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments> -->
+  </PropertyGroup>
+
+  <!-- Windows -->
+  <PropertyGroup Condition="$(OS)=='Windows_NT'">
+	  <DockerfileRunArguments>-v $(APPDATA)/Microsoft/UserSecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments>
+  </PropertyGroup>
+
+  <!-- Unix -->
+  <PropertyGroup Condition="$(OS)=='Unix'">
+    <DockerfileRunArguments>-v $(HOME)/.microsoft/usersecrets/$(UserSecretsId):/root/.microsoft/usersecrets/$(UserSecretsId)</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DSharpPlus" Version="4.3.0" />
     <PackageReference Include="DSharpPlus.SlashCommands" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="NLog" Version="5.1.1" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.1" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+    <PackageReference Include="NLog" Version="5.1.2" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.2" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
 	<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -56,12 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Data\Database-log.db" />
-    <None Remove="Data\Database.db" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Data\NLog.config">
+    <None Update="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

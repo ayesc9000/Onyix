@@ -1,5 +1,5 @@
 ﻿/* Onyix - An open-source Discord bot
- * Copyright (C) 2022 Liam "AyesC" Hogan
+ * Copyright (C) 2023 Liam "AyesC" Hogan
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,106 +18,118 @@
 using DSharpPlus;
 using DSharpPlus.EventArgs;
 using DSharpPlus.SlashCommands;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog.Config;
+using NLog;
 using NLog.Extensions.Logging;
+using Onyix.Services;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using DSharpPlus.SlashCommands.EventArgs;
 
-namespace Onyix
+namespace Onyix;
+
+public class Bot
 {
-	public class Bot
+	private readonly IConfigurationRoot config;
+	private readonly ServiceProvider services;
+	private readonly DiscordClient client;
+	private readonly Logger logger;
+	private readonly SlashCommandsExtension commands;
+
+	/// <summary>
+	/// Startup task
+	/// </summary>
+	public Bot()
 	{
-		private readonly ulong guild;
-		private readonly DiscordClient client;
-		private readonly SlashCommandsExtension commands;
-		private readonly Database database;
+		// Configuration
+		config = new ConfigurationBuilder()
+			.SetBasePath(Environment.CurrentDirectory)
+			.AddEnvironmentVariables()
+			.AddUserSecrets<Program>()
+			.Build();
 
-		/// <summary>
-		/// Initialize a new bot client
-		/// </summary>
-		public Bot()
+		// Logs
+		LogManager.Configuration = new XmlLoggingConfiguration("NLog.config");
+		logger = LogManager.GetCurrentClassLogger();
+
+		// Client
+		client = new(new()
 		{
-			// Get debug guild
-			// TryParse already outputs 0 on failure; no need for us to do anything
-			_ = ulong.TryParse(Env.Guild, out guild);
-			
-			// Create clients
-			client = new(new()
-			{
-				Token = Env.Token,
-				TokenType = TokenType.Bot,
-				Intents = DiscordIntents.AllUnprivileged | DiscordIntents.GuildMembers,
-				LoggerFactory = LoggerFactory.Create(builder => builder.AddNLog())
-			});
+			Token = config["TOKEN"],
+			TokenType = TokenType.Bot,
+			Intents = DiscordIntents.AllUnprivileged | DiscordIntents.GuildMembers,
+			LoggerFactory = LoggerFactory.Create(builder => builder.AddNLog())
+		});
 
-			client.Ready += (client, e) =>
-			{
-				_ = Ready();
-				return Task.CompletedTask;
-			};
+		//client.CurrentApplication.GetAssetsAsync().Wait();
+		client.Ready += Ready;
+		client.MessageCreated += MessageCreated;
 
-			client.MessageCreated += (client, e) =>
-			{
-				_ = MessageCreated(e);
-				return Task.CompletedTask;
-			};
+		// Services
+		services = new ServiceCollection()
+			.AddSingleton(config)
+			.AddSingleton(client)
+			.AddSingleton(logger)
+			.AddDbContext<DatabaseService>()
+			.AddSingleton<LogonService>()
+			.BuildServiceProvider();
 
-			// Setup slash commands
-			commands = client.UseSlashCommands();
+		// Slash commands
+		_ = uint.TryParse(config["GUILD"], out uint guild);
 
-			commands.SlashCommandErrored += (cmds, e) =>
-			{
-				Program.Logs.Error(e.Exception, e.ToString());
-				return Task.CompletedTask;
-			};
-
-			//client.CurrentApplication.GetAssetsAsync().Wait();
-
-			// Start database
-			database = new();
-		}
-
-		/// <summary>
-		/// Connect the client to Discord
-		/// </summary>
-		public async Task Start()
+		commands = client.UseSlashCommands(new()
 		{
-			// Initialize
-			commands.RegisterCommands(Assembly.GetExecutingAssembly(), guild != 0 ? guild : null);
-			Program.Logs.Info("Registered assembly modules");
+			Services = services
+		});
 
-			// Connect to Discord
-			await client.ConnectAsync();
-			await Task.Delay(-1);
-		}
+		commands.RegisterCommands(Assembly.GetExecutingAssembly(), guild != 0 ? guild : null);
+		commands.SlashCommandErrored += SlashCommandErrored;
+	}
 
-		/// <summary>
-		/// Fired when the websocket is ready
-		/// </summary>
-		private async Task Ready()
-		{
-			Program.Logs.Info("Onyix is online");
-			return;
-		}
+	/// <summary>
+	/// Start the bot
+	/// </summary>
+	public async Task StartAsync()
+	{
+		LogonService ls = services.GetRequiredService<LogonService>();
+		await ls.StartAsync();
+		await Task.Delay(-1);
+	}
 
-		/// <summary>
-		/// Fired when a message is received
-		/// </summary>
-		/// <param name="param">Message details</param>
-		private async Task MessageCreated(MessageCreateEventArgs e)
-		{
-			if (e.Author.IsBot) return;
-			await Levels.GiveXPAsync(e, database);
-		}
+	/// <summary>
+	/// Fired when the websocket is ready
+	/// </summary>
+	/// <param name="sender">Sender client</param>
+	/// <param name="e">Event arguments</param>
+	private Task Ready(DiscordClient sender, ReadyEventArgs e)
+	{
+		logger.Info("Startup complete");
+		return Task.CompletedTask;
+	}
 
-		/// <summary>
-		/// Returns the Discord socket client
-		/// </summary>
-		public DiscordClient Client => client;
+	/// <summary>
+	/// Fired when a message is received
+	/// </summary>
+	/// <param name="sender">Sender client</param>
+	/// <param name="e">Event arguments</param>
+	private async Task MessageCreated(DiscordClient sender, MessageCreateEventArgs e)
+	{
+		if (e.Author.IsBot) return;
+		await Levels.GiveXPAsync(e, services);
+	}
 
-		/// <summary>
-		/// Get the database instance for this client
-		/// </summary>
-		public Database Database => database;
+	/// <summary>
+	/// Fires when a slash command encounters an error
+	/// </summary>
+	/// <param name="cmds">Slash commands extension</param>
+	/// <param name="e">Event arguments</param>
+	private Task SlashCommandErrored(SlashCommandsExtension cmds, SlashCommandErrorEventArgs e)
+	{
+		logger.Error(e.Exception, e.ToString());
+		return Task.CompletedTask;
 	}
 }
