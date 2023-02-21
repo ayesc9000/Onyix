@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -24,26 +24,18 @@ namespace Onyix.Entities
 	public class LevelSettings
 	{
 		public int Id { get; set; }
-
 		public ulong GuildId { get; set; }
-
 		public bool EnableLevels { get; set; }
-
 		public bool EnableLevelUpMessage { get; set; }
-
 		public double Multiplier { get; set; }
-
 		public int XpPerMessage { get; set; }
-
 		public int XpPerLevel { get; set; }
-
 		public int Cooldown { get; set; }
-
 		public string LevelUpTitle { get; set; }
-
 		public string LevelUpContent { get; set; }
-
 		public Dictionary<long, ulong> LevelRoles { get; set; }
+
+		public LevelSettings() : this(0) { }
 
 		public LevelSettings(ulong guild)
 		{

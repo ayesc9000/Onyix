@@ -8,13 +8,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
-
 
 using Microsoft.EntityFrameworkCore;
 
@@ -24,18 +23,14 @@ namespace Onyix.Entities
 	public class UserKarma
 	{
 		public int Id { get; set; }
-
 		public ulong UserId { get; set; }
-
 		public long Upvotes { get; set; }
-
 		public long Downvotes { get; set; }
-
 		public long Awards { get; set; }
-
 		public long Posts { get; set; }
-
 		public long Removed { get; set; }
+
+		public UserKarma() : this(0) { }
 
 		public UserKarma(ulong user)
 		{

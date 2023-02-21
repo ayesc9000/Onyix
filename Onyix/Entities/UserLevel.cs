@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -24,18 +24,14 @@ namespace Onyix.Entities
 	public class UserLevel
 	{
 		public int Id { get; set; }
-
 		public ulong UserId { get; set; }
-
 		public ulong GuildId { get; set; }
-
 		public long XP { get; set; }
-
 		public long TotalXP { get; set; }
-
 		public long Level { get; set; }
-
 		public DateTime LastGain { get; set; }
+
+		public UserLevel() : this(0, 0) { }
 
 		public UserLevel(ulong user, ulong guild)
 		{
