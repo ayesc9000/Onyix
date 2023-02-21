@@ -17,6 +17,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Onyix.Entities
 {
@@ -33,6 +34,8 @@ namespace Onyix.Entities
 		public int Cooldown { get; set; }
 		public string LevelUpTitle { get; set; }
 		public string LevelUpContent { get; set; }
+
+		[NotMapped]
 		public Dictionary<long, ulong> LevelRoles { get; set; }
 
 		public LevelSettings() : this(0) { }
