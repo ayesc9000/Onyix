@@ -42,7 +42,7 @@ public class Bot
 	private readonly SlashCommandsExtension commands;
 
 	/// <summary>
-	/// Startup task
+	/// Construct a new bot instance
 	/// </summary>
 	public Bot()
 	{
