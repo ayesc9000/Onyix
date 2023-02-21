@@ -2,49 +2,57 @@
 
 Onyix is an open-source general purpose Discord bot, written in C# using DSharpPlus.
 
-The code is licensed under the GPL v3 license. Please refer to `LICENSE.md` for more information. For contributing guidelines, please read `CONTRIBUTING.md`.
+Please read `LICENSE.md`, `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` before contributing or forking for additional information.
 
 ---
 
-## 1. Development quick start
+**Table of contents:**
+
+1. [Quick start](#1-quick-start)
+
+2. [Debugging containers](#2-debugging-containers)
+
+3. [Deploying containers](#3-deploying-containers)
+
+4. [Variables](#4-variables)
+
+## 1. Quick start
 
 Prerequisites:
 
-- Visual Studio 2022 with .NET 7
+- .NET SDK (Or .NET Desktop Development workload for VS)
+- .NET 7 runtime
 
-   -- OR --
+Clone and restore the repository (`dotnet restore`).
 
-   The .NET 7 SDK with your IDE of choice
+Set the `TOKEN`, `GUILD` and `DATABASE` variables with user secrets. You can set a user secret via the CLI with `dotnet user-secrets set "NAME" "VALUE"`. You can also set these through environment variables.
 
-- A MariaDB database for development use
+Hit F5 (or type `dotnet run`) and you're debugging!
 
-Clone the repository to your local machine, blah blah blah the usual.
-
-Open a terminal from the Onyix project directory and enter your Discord token, database login, and development guild ID into the project user secrets with `dotnet user-secrets set "NAME" "VALUE"`.
-
-You can refer to [Environment variables](#3-environment-variables) for a complete list of all variables and their purpose.
-
-You can debug both on your local machine or from within a Docker container. To debug within a container, select the Docker debug target from within Visual Studio.
-
-For non-VS users, you can use `dotnet run --launch-profile Docker`.
-
-## 2. Deploying container
+## 2. Debugging containers
 
 Prerequisites:
 
-- Working development environment ([Development quick start](#1-development-quick-start))
-- Docker Desktop (If using Visual Studio)
+- Docker (Docker Desktop if using VS)
+
+**Visual Studio:**
+Select the debug target dropdown, and select the `Docker` profile from the list. You can then either click Debug or press F5 to begin debugging within the container.
+
+**CLI:**
+Open a terminal in the Onyix project folder, and type `dotnet run --launch-profile Docker`.
+
+## 3. Deploying containers
+
+Prerequisites:
+
+- Docker (Docker Desktop if using VS)
 - Server with Docker and MariaDB
 
-From the root of the Onyix project in Visual Studio, right-click the Dockerfile, and select `Build Docker Image`.
+Right-click the Onyix project and select `Build Docker Image`, or type `docker build` in a terminal from within the project directory.
 
-For non-VS users, you can run `docker build` from within the project directory.
+Copy the newly created image onto your server via your preferred means, and create a new container. Add the `TOKEN` and `DATABASE` strings as environment variables. DO NOT include the `GUILD` string in a production deployment.
 
-> Note: Visual Studio will fail to build the Docker image if Docker Desktop is not running.
-
-On your server, add a new container with the created image. The container must have a Discord token and database login specified in the environment variables. Your development guild ID should not be included. Refer to [Environment variables](#3-environment-variables) for a complete list of all variables.
-
-## 3. Environment variables
+## 4. Variables
 
 | **Name** | **Optional** | **Purpose**                |
 | -------- | ------------ | -------------------------- |
