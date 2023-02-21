@@ -29,6 +29,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus.SlashCommands.EventArgs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Onyix;
 
@@ -74,8 +75,9 @@ public class Bot
 			.AddSingleton(config)
 			.AddSingleton(client)
 			.AddSingleton(logger)
-			.AddDbContext<DatabaseService>()
+			.AddDbContext<DatabaseService>(c => c.UseMySql(ServerVersion.AutoDetect(config["DATABASE"])))
 			.AddSingleton<LogonService>()
+			.AddSingleton<LevelsService>()
 			.BuildServiceProvider();
 
 		// Slash commands
@@ -119,7 +121,9 @@ public class Bot
 	private async Task MessageCreated(DiscordClient sender, MessageCreateEventArgs e)
 	{
 		if (e.Author.IsBot) return;
-		await Levels.GiveXPAsync(e, services);
+
+		LevelsService ls = services.GetRequiredService<LevelsService>();
+		await ls.GiveXPAsync(e);
 	}
 
 	/// <summary>

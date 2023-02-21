@@ -16,9 +16,6 @@
  */
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using NLog;
 using Onyix.Entities;
 using Onyix.Exceptions;
 using System;
@@ -29,24 +26,11 @@ namespace Onyix.Services;
 
 public class DatabaseService : DbContext
 {
-	private readonly IConfigurationRoot config;
-	private readonly Logger logger; 
-
 	public DbSet<LevelSettings>? LevelSettings { get; set; }
 	public DbSet<UserKarma>? UserKarma { get; set; }
 	public DbSet<UserLevel>? UserLevel { get; set; }
 
-	public DatabaseService(IServiceProvider s)
-	{
-		config = s.GetRequiredService<IConfigurationRoot>();
-		logger = s.GetRequiredService<Logger>();
-	}
-
-	protected override void OnConfiguring(DbContextOptionsBuilder options)
-	{
-		options.UseMySql(ServerVersion.AutoDetect(config["DATABASE"]));
-		logger.Info("Database started");
-	}
+	public DatabaseService(DbContextOptions options) : base(options) { }
 
 	public T? FindOne<T>(Expression<Func<T, bool>> exp) where T : class
 	{
