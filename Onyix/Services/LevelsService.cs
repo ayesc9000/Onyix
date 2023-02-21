@@ -18,7 +18,7 @@
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.DependencyInjection;
-using Onyix.Entities;
+using Onyix.Database;
 using System;
 using System.Threading.Tasks;
 

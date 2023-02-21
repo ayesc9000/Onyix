@@ -17,7 +17,7 @@
 
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
-using Onyix.Entities;
+using Onyix.Database;
 using System.Threading.Tasks;
 
 namespace Onyix.Commands

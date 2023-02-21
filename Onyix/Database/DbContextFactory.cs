@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Onyix.Services;
 
-namespace Onyix;
+namespace Onyix.Database;
 
 /// <summary>
 /// This is a context factory for design-time database work. It creates a

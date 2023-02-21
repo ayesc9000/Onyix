@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Onyix.Entities
+namespace Onyix.Database
 {
 	[Index(nameof(GuildId), IsUnique = true)]
 	public class LevelSettings

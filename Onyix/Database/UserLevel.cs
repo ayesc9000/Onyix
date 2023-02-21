@@ -16,30 +16,31 @@
  */
 
 using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Onyix.Entities
+namespace Onyix.Database
 {
-	[Index(nameof(UserId), IsUnique = true)]
-	public class UserKarma
+	[Index(nameof(UserId), nameof(GuildId), IsUnique = true)]
+	public class UserLevel
 	{
 		public int Id { get; set; }
 		public ulong UserId { get; set; }
-		public long Upvotes { get; set; }
-		public long Downvotes { get; set; }
-		public long Awards { get; set; }
-		public long Posts { get; set; }
-		public long Removed { get; set; }
+		public ulong GuildId { get; set; }
+		public long XP { get; set; }
+		public long TotalXP { get; set; }
+		public long Level { get; set; }
+		public DateTime LastGain { get; set; }
 
-		public UserKarma() : this(0) { }
+		public UserLevel() : this(0, 0) { }
 
-		public UserKarma(ulong user)
+		public UserLevel(ulong user, ulong guild)
 		{
 			UserId = user;
-			Upvotes = 0;
-			Downvotes = 0;
-			Awards = 0;
-			Posts = 0;
-			Removed = 0;
+			GuildId = guild;
+			XP = 0;
+			TotalXP = 0;
+			Level = 0;
+			LastGain = DateTime.MinValue;
 		}
 	}
 }

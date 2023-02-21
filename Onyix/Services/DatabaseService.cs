@@ -16,7 +16,7 @@
  */
 
 using Microsoft.EntityFrameworkCore;
-using Onyix.Entities;
+using Onyix.Database;
 using Onyix.Exceptions;
 using System;
 using System.Linq;
