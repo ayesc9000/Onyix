@@ -75,7 +75,8 @@ public class Bot
 			.AddSingleton(config)
 			.AddSingleton(client)
 			.AddSingleton(logger)
-			.AddDbContext<DatabaseService>(c => c.UseMySql(ServerVersion.AutoDetect(config["DATABASE"])))
+			.AddDbContext<DatabaseService>(c => 
+			c.UseMySql(config["DATABASE"], ServerVersion.AutoDetect(config["DATABASE"])))
 			.AddSingleton<LogonService>()
 			.AddSingleton<LevelsService>()
 			.BuildServiceProvider();
