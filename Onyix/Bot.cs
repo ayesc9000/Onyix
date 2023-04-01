@@ -33,6 +33,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Onyix;
 
+/// <summary>
+/// Core bot class
+/// </summary>
 public class Bot
 {
 	private readonly IConfigurationRoot config;
@@ -127,7 +130,7 @@ public class Bot
 	}
 
 	/// <summary>
-	/// Fires when a slash command encounters an error
+	/// Fired when a slash command encounters an error
 	/// </summary>
 	/// <param name="cmds">Slash commands extension</param>
 	/// <param name="e">Event arguments</param>
