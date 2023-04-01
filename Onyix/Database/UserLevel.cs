@@ -20,27 +20,18 @@ using System;
 
 namespace Onyix.Database
 {
+	/// <summary>
+	/// Represents a user's current level in a guild
+	/// </summary>
 	[Index(nameof(UserId), nameof(GuildId), IsUnique = true)]
 	public class UserLevel
 	{
 		public int Id { get; set; }
-		public ulong UserId { get; set; }
-		public ulong GuildId { get; set; }
-		public long XP { get; set; }
-		public long TotalXP { get; set; }
-		public long Level { get; set; }
-		public DateTime LastGain { get; set; }
-
-		public UserLevel() : this(0, 0) { }
-
-		public UserLevel(ulong user, ulong guild)
-		{
-			UserId = user;
-			GuildId = guild;
-			XP = 0;
-			TotalXP = 0;
-			Level = 0;
-			LastGain = DateTime.MinValue;
-		}
+		public ulong UserId { get; set; } = 0;
+		public ulong GuildId { get; set; } = 0;
+		public long XP { get; set; } = 0;
+		public long TotalXP { get; set; } = 0;
+		public long Level { get; set; } = 0;
+		public DateTime LastGain { get; set; } = DateTime.MinValue;
 	}
 }

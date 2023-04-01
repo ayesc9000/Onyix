@@ -19,27 +19,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Onyix.Database
 {
+	/// <summary>
+	/// Represents a user's global karma
+	/// </summary>
 	[Index(nameof(UserId), IsUnique = true)]
 	public class UserKarma
 	{
 		public int Id { get; set; }
-		public ulong UserId { get; set; }
-		public long Upvotes { get; set; }
-		public long Downvotes { get; set; }
-		public long Awards { get; set; }
-		public long Posts { get; set; }
-		public long Removed { get; set; }
-
-		public UserKarma() : this(0) { }
-
-		public UserKarma(ulong user)
-		{
-			UserId = user;
-			Upvotes = 0;
-			Downvotes = 0;
-			Awards = 0;
-			Posts = 0;
-			Removed = 0;
-		}
+		public ulong UserId { get; set; } = 0;
+		public long Upvotes { get; set; } = 0;
+		public long Downvotes { get; set; } = 0;
+		public long Awards { get; set; } = 0;
+		public long Posts { get; set; } = 0;
+		public long Removed { get; set; } = 0;
 	}
 }

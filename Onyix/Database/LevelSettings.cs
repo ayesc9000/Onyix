@@ -21,37 +21,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Onyix.Database
 {
+	/// <summary>
+	/// Represents the level system settings for a guild
+	/// </summary>
 	[Index(nameof(GuildId), IsUnique = true)]
 	public class LevelSettings
 	{
 		public int Id { get; set; }
-		public ulong GuildId { get; set; }
-		public bool EnableLevels { get; set; }
-		public bool EnableLevelUpMessage { get; set; }
-		public double Multiplier { get; set; }
-		public int XpPerMessage { get; set; }
-		public int XpPerLevel { get; set; }
-		public int Cooldown { get; set; }
-		public string LevelUpTitle { get; set; }
-		public string LevelUpContent { get; set; }
+		public ulong GuildId { get; set; } = 0;
+		public bool EnableLevels { get; set; } = false;
+		public bool EnableLevelUpMessage { get; set; } = true;
+		public double Multiplier { get; set; } = 1;
+		public int XpPerMessage { get; set; } = 15;
+		public int XpPerLevel { get; set; } = 270;
+		public int Cooldown { get; set; } = 60;
+		public string LevelUpTitle { get; set; } = "Leveled Up!";
+		public string LevelUpContent { get; set; } = "You have leveled up to level $$LVL!";
 
 		[NotMapped]
-		public Dictionary<long, ulong> LevelRoles { get; set; }
-
-		public LevelSettings() : this(0) { }
-
-		public LevelSettings(ulong guild)
-		{
-			GuildId = guild;
-			EnableLevels = false;
-			EnableLevelUpMessage = true;
-			XpPerMessage = 15;
-			XpPerLevel = 270;
-			Multiplier = 1;
-			Cooldown = 60;
-			LevelUpTitle = "Leveled Up!";
-			LevelUpContent = "You have leveled up to level $$LVL!";
-			LevelRoles = new();
-		}
+		public Dictionary<long, ulong> LevelRoles { get; set; } = new();
 	}
 }
