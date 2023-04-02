@@ -26,13 +26,6 @@ public partial class Program
 	/// </summary>
 	public static void Main()
 	{
-		try
-		{
-			new Bot().StartAsync().GetAwaiter().GetResult();
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine(ex.Message);
-		}
+		new Bot().StartAsync().GetAwaiter().GetResult();
 	}
 }
