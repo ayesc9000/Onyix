@@ -17,6 +17,9 @@
 
 namespace Onyix;
 
+/// <summary>
+/// The primary application class
+/// </summary>
 public partial class Program
 {
 	/// <summary>
