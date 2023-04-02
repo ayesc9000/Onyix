@@ -24,8 +24,23 @@ namespace Onyix;
 /// </summary>
 public static class Colors
 {
-	public static DiscordColor Gray => new("#606266");
+	/// <summary>
+	/// A DiscordColor initialized as gray
+	/// </summary>
+	public static DiscordColor Grey => new("#606266");
+
+	/// <summary>
+	/// A DiscordColor initialized as green
+	/// </summary>
 	public static DiscordColor Green => new("#32a852");
+
+	/// <summary>
+	/// A DiscordColor initialized as yellow
+	/// </summary>
 	public static DiscordColor Yellow => new("#edbc28");
+
+	/// <summary>
+	/// A DiscordColor initialized as red
+	/// </summary>
 	public static DiscordColor Red => new("#e83c3c");
 }
