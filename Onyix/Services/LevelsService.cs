@@ -40,7 +40,10 @@ public class LevelsService
 
 		if (settings is null)
 		{
-			settings = new LevelSettings(e.Guild.Id);
+			settings = new LevelSettings()
+			{
+				GuildId = e.Guild.Id
+			};
 			db.Add(settings);
 		}
 
@@ -52,7 +55,11 @@ public class LevelsService
 
 		if (user is null)
 		{
-			user = new UserLevel(e.Author.Id, e.Guild.Id);
+			user = new UserLevel()
+			{
+				UserId = e.Author.Id,
+				GuildId = e.Guild.Id
+			};
 			db.Add(user);
 		}
 
