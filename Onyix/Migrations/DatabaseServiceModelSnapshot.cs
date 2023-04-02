@@ -15,9 +15,9 @@ namespace Onyix.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
 
-            modelBuilder.Entity("Onyix.Entities.LevelSettings", b =>
+            modelBuilder.Entity("Onyix.Database.LevelSettings", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace Onyix.Migrations
                     b.ToTable("LevelSettings");
                 });
 
-            modelBuilder.Entity("Onyix.Entities.UserKarma", b =>
+            modelBuilder.Entity("Onyix.Database.UserKarma", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,7 +92,7 @@ namespace Onyix.Migrations
                     b.ToTable("UserKarma");
                 });
 
-            modelBuilder.Entity("Onyix.Entities.UserLevel", b =>
+            modelBuilder.Entity("Onyix.Database.UserLevel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
