@@ -36,7 +36,7 @@ public class Roll : ApplicationCommandModule
 	/// <param name="starting">Add or subtract a specific amount from the result</param>
 	/// <returns>An asynchronous task representing this reply</returns>
 	[SlashCommand("roll", "Rolls a dice", true)]
-	public static async Task RollDie(InteractionContext ctx,
+	public static async Task Execute(InteractionContext ctx,
 		[Option("amount", "The amount of dice to roll")] long amount,
 		[Option("sides", "The amount of sides per die")] long sides,
 		[Option("starting", "Add or subtract a specific amount from the result")] long starting)
