@@ -29,7 +29,7 @@ public class AboutCommand : ApplicationCommandModule
 		await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 			.WithTitle("About Onyix")
 			.WithDescription("Onyix is a Discord bot that provides a variety of commands and tools for users and admins.")
-			.WithColor(Colors.Gray)
+			.WithColor(Colors.Grey)
 			.WithThumbnail(ctx.Client.CurrentUser.AvatarUrl));
 	}
 }

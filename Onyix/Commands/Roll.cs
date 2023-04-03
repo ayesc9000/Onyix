@@ -75,7 +75,7 @@ namespace Onyix.Commands
 			// Reply with embed
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 				.WithTitle("Dice roll")
-				.WithColor(Colors.Gray)
+				.WithColor(Colors.Grey)
 				.AddField("Dice", amount.ToString(), true)
 				.AddField("Sides", sides.ToString(), true)
 				.AddField("Starting value", starting.ToString(), true)

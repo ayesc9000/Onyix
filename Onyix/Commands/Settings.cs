@@ -95,7 +95,7 @@ namespace Onyix.Commands
 					await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 						.WithTitle("Level roles")
 						.WithDescription("There are no items to display.")
-						.WithColor(Colors.Gray));
+						.WithColor(Colors.Grey));
 
 					return;
 				}
@@ -116,7 +116,7 @@ namespace Onyix.Commands
 				DiscordEmbedBuilder embed = new DiscordEmbedBuilder()
 					.WithTitle("Level roles")
 					.WithDescription($"Page {page}/{pages}")
-					.WithColor(Colors.Gray);
+					.WithColor(Colors.Grey);
 
 				// TODO: Add page system!
 				for (int i = start; i < end; i++)

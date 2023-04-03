@@ -77,7 +77,7 @@ namespace Onyix.Commands
 			// Reply with embed
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 				.WithTitle($"{target.Username}'s Level")
-				.WithColor(Colors.Gray)
+				.WithColor(Colors.Grey)
 				.WithThumbnail(target.AvatarUrl)
 				.AddField("Level", user.Level.ToString(), true)
 				.AddField("Total XP", user.TotalXP.ToString(), true)
