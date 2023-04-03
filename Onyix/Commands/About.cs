@@ -30,9 +30,9 @@ public class AboutCommand : ApplicationCommandModule
 	/// Reply to an interaction with the about command
 	/// </summary>
 	/// <param name="ctx">The context for this interaction</param>
-	/// <returns>A new asynchronous task</returns>
+	/// <returns>An asynchronous task representing this reply</returns>
 	[SlashCommand("about", "Displays information about the bot.", true)]
-	public async Task About(InteractionContext ctx)
+	public static async Task About(InteractionContext ctx)
 	{
 		await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 			.WithTitle("About Onyix")
