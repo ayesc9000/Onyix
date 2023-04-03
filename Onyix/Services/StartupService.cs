@@ -16,6 +16,7 @@
  */
 
 using DSharpPlus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using System;
@@ -24,29 +25,36 @@ using System.Threading.Tasks;
 namespace Onyix.Services;
 
 /// <summary>
-/// A service to manage starting and logging in the Discord client
+/// A service to manage starting other services
 /// </summary>
-public class LogonService
+public class StartupService
 {
 	private readonly DiscordClient client;
+	private readonly DatabaseService database;
 	private readonly Logger logger;
 
 	/// <summary>
-	/// Create a new instance of the logon service
+	/// Create a new instance of the startup service
 	/// </summary>
 	/// <param name="s"></param>
-	public LogonService(IServiceProvider s)
+	public StartupService(IServiceProvider s)
 	{
 		client = s.GetRequiredService<DiscordClient>();
+		database = s.GetRequiredService<DatabaseService>();
 		logger = s.GetRequiredService<Logger>();
 	}
 
 	/// <summary>
-	/// Start the Discord client and login to the Discord API
+	/// Start the DiscordClient and apply pending database migrations
 	/// </summary>
 	/// <returns></returns>
 	public async Task StartAsync()
 	{
+		// Apply database migrations
+		database.Database.Migrate();
+		logger.Debug("Applied database migrations");
+
+		// Connect client
 		await client.ConnectAsync();
 		logger.Info("Connected!");
 	}

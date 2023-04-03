@@ -78,8 +78,8 @@ public class Bot
 			.AddSingleton(config)
 			.AddSingleton(client)
 			.AddSingleton(logger)
-			.AddDbContext<DatabaseService>(c => c.UseMySql(ServerVersion.AutoDetect(config["DATABASE"])))
-			.AddSingleton<LogonService>()
+			.AddDbContext<DatabaseService>(c => c.UseMySql(config["DATABASE"], ServerVersion.AutoDetect(config["DATABASE"])))
+			.AddSingleton<StartupService>()
 			.AddSingleton<LevelsService>()
 			.BuildServiceProvider();
 
@@ -100,7 +100,7 @@ public class Bot
 	/// </summary>
 	public async Task StartAsync()
 	{
-		LogonService ls = services.GetRequiredService<LogonService>();
+		StartupService ls = services.GetRequiredService<StartupService>();
 		await ls.StartAsync();
 		await Task.Delay(-1);
 	}
