@@ -1,5 +1,5 @@
 ﻿/* Onyix - An open-source Discord bot
- * Copyright (C) 2022 Liam "AyesC" Hogan
+ * Copyright (C) 2023 Liam "AyesC" Hogan
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,41 +15,23 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-using LiteDB;
 using System;
 
-namespace Onyix.Entities
+namespace Onyix.Exceptions;
+
+/// <summary>
+/// Represents errors that occur in database results from a query or operation
+/// </summary>
+public class DatabaseResultException : Exception
 {
-	public class UserLevel
-	{
-		public ObjectId? Id { get; set; }
-		public ulong UserId { get; set; }
-		public ulong GuildId { get; set; }
-		public long XP { get; set; }
-		public long TotalXP { get; set; }
-		public long Level { get; set; }
-		public DateTime LastGain { get; set; }
+	/// <summary>
+	/// Create a new DatabaseResultException
+	/// </summary>
+	public DatabaseResultException() : base() { }
 
-		public UserLevel()
-		{
-			Id = null;
-			UserId = 0;
-			GuildId = 0;
-			XP = 0;
-			TotalXP = 0;
-			Level = 0;
-			LastGain = DateTime.MinValue;
-		}
-
-		public UserLevel(ulong user, ulong guild)
-		{
-			Id = null;
-			UserId = user;
-			GuildId = guild;
-			XP = 0;
-			TotalXP = 0;
-			Level = 0;
-			LastGain = DateTime.MinValue;
-		}
-	}
+	/// <summary>
+	/// Create a new DatabaseResultException with an optional message
+	/// </summary>
+	/// <param name="message"></param>
+	public DatabaseResultException(string message) : base(message) { }
 }

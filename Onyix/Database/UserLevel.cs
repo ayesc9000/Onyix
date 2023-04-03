@@ -15,18 +15,23 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-namespace Onyix;
+using Microsoft.EntityFrameworkCore;
+using System;
 
-/// <summary>
-/// The primary application class
-/// </summary>
-public partial class Program
+namespace Onyix.Database
 {
 	/// <summary>
-	/// Main entry point
+	/// Represents a user's current level in a guild
 	/// </summary>
-	public static void Main()
+	[Index(nameof(UserId), nameof(GuildId), IsUnique = true)]
+	public class UserLevel
 	{
-		new Bot().StartAsync().GetAwaiter().GetResult();
+		public int Id { get; set; }
+		public ulong UserId { get; set; } = 0;
+		public ulong GuildId { get; set; } = 0;
+		public long XP { get; set; } = 0;
+		public long TotalXP { get; set; } = 0;
+		public long Level { get; set; } = 0;
+		public DateTime LastGain { get; set; } = DateTime.MinValue;
 	}
 }

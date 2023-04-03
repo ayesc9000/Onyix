@@ -17,7 +17,7 @@
 
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
-using Onyix.Entities;
+using Onyix.Database;
 using System.Threading.Tasks;
 
 namespace Onyix.Commands
@@ -45,11 +45,16 @@ namespace Onyix.Commands
 				return;
 			}
 
-			// Get user information
-			UserLevel user = Database.GetUserLevel(target.Id, ctx.Guild.Id);
-			LevelSettings settings = Database.GetLevelSettings(ctx.Guild.Id);
+			// Get guild settings
+			/*LevelSettings? settings = db.FindOne<LevelSettings>(s => s.GuildId == ctx.Guild.Id);
 
-			// Check if levels are enabled in this server
+			if (settings is null)
+			{
+				settings = new LevelSettings(ctx.Guild.Id);
+				db.Add(settings);
+			}
+
+			// Check if levels are enabled in this guild
 			if (!settings.EnableLevels)
 			{
 				await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
@@ -60,14 +65,23 @@ namespace Onyix.Commands
 				return;
 			}
 
+			// Get user level
+			UserLevel? user = db.FindOne<UserLevel>(s => s.GuildId == ctx.Guild.Id);
+
+			if (user is null)
+			{
+				user = new UserLevel(ctx.User.Id, ctx.Guild.Id);
+				db.Add(user);
+			}
+
 			// Reply with embed
 			await ctx.CreateResponseAsync(new DiscordEmbedBuilder()
 				.WithTitle($"{target.Username}'s Level")
-				.WithColor(Colors.Gray)
+				.WithColor(Colors.Grey)
 				.WithThumbnail(target.AvatarUrl)
 				.AddField("Level", user.Level.ToString(), true)
 				.AddField("Total XP", user.TotalXP.ToString(), true)
-				.AddField("Progress to next level", Levels.GetLevelProgress(user, settings), false), true);
+				.AddField("Progress to next level", Levels.GetLevelProgress(user, settings), false), true);*/
 		}
 	}
 }

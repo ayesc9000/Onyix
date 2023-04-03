@@ -1,4 +1,9 @@
-﻿/* Onyix - An open-source Discord bot
+# Contributing Guidelines
+
+All source files in this repository should include boilerplate for the GPL v3 license. A template for this is included below:
+
+```csharp
+/* Onyix - An open-source Discord bot
  * Copyright (C) 2022 Liam "AyesC" Hogan
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,41 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
+```
 
-using LiteDB;
+You may modify these aspects of the boilerplate:
 
-namespace Onyix.Entities
-{
-	public class UserKarma
-	{
-		public ObjectId? Id { get; set; }
-		public ulong UserId { get; set; }
-		public long Upvotes { get; set; }
-		public long Downvotes { get; set; }
-		public long Awards { get; set; }
-		public long Posts { get; set; }
-		public long Removed { get; set; }
+- The copyright date
 
-		public UserKarma()
-		{
-			Id = null;
-			UserId = 0;
-			Upvotes = 0;
-			Downvotes = 0;
-			Awards = 0;
-			Posts = 0;
-			Removed = 0;
-		}
+- The commenting syntax
 
-		public UserKarma(ulong user)
-		{
-			Id = null;
-			UserId = user;
-			Upvotes = 0;
-			Downvotes = 0;
-			Awards = 0;
-			Posts = 0;
-			Removed = 0;
-		}
-	}
-}
+Any changes to the boilerplate that do not conform to these requirements will not be accepted.
