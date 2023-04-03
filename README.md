@@ -20,14 +20,19 @@ Please read `LICENSE.md`, `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` before cont
 
 Prerequisites:
 
-- .NET SDK (Or .NET Desktop Development workload for VS)
+- If using Visual Studio, must be 2022 or newer
+- .NET SDK or .NET Desktop Development workload for Visual Studio
 - .NET 7 runtime
 
 Clone and restore the repository (`dotnet restore`).
 
-Set the `TOKEN`, `GUILD` and `DATABASE` variables with user secrets. You can set a user secret via the CLI with `dotnet user-secrets set "NAME" "VALUE"`. You can also set these through environment variables.
+To set variables, you can either use environment variables or user secrets. To set a user secret, open a terminal in the project directory and use the command `dotnet user-secrets set "NAME" "VALUE"`.
 
-Hit F5 (or type `dotnet run`) and you're debugging!
+Set the `TOKEN` variable to your Discord bot account token. You can also set the `GUILD` variable to the ID of your testing/debugging guild.
+
+Next, set the `DATABASE` variable to a valid MySql/MariaDB connection string. Make sure that the database you put in the connection string does not already exist. You can also set the `MIGRATIONDATABASE` connection string variable if you plan to create new EF Core migrations. Note that this database will be recreated every time you create a migration, so it should never be used to store information.
+
+Finally, hit F5 (or type `dotnet run`) and you're debugging!
 
 ## 2. Debugging containers
 
@@ -36,7 +41,7 @@ Prerequisites:
 - Docker (Docker Desktop if using VS)
 
 **Visual Studio:**
-Select the debug target dropdown, and select the `Docker` profile from the list. You can then either click Debug or press F5 to begin debugging within the container.
+Select the debug target drop down, and select the `Docker` profile from the list. You can then either click Debug or press F5 to begin debugging within the container.
 
 **CLI:**
 Open a terminal in the Onyix project folder, and type `dotnet run --launch-profile Docker`.
@@ -54,8 +59,9 @@ Copy the newly created image onto your server via your preferred means, and crea
 
 ## 4. Variables
 
-| **Name** | **Optional** | **Purpose**                |
-| -------- | ------------ | -------------------------- |
-| TOKEN    | No           | Discord account token      |
-| GUILD    | Yes          | Debug guild ID             |
-| DATABASE | No           | Database connection string |
+| **Name**          | **Optional** | **Purpose**                           |
+| ----------------- | ------------ | ------------------------------------- |
+| TOKEN             | No           | Discord account token                 |
+| GUILD             | Yes          | Debug guild ID                        |
+| DATABASE          | No           | Database connection string            |
+| MIGRATIONDATABASE | Yes          | Migrations database connection string |

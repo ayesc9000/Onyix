@@ -26,10 +26,6 @@ namespace Onyix.Services;
 
 public class DatabaseService : DbContext
 {
-	public DbSet<LevelSettings>? LevelSettings { get; set; }
-	public DbSet<UserKarma>? UserKarma { get; set; }
-	public DbSet<UserLevel>? UserLevel { get; set; }
-
 	public DatabaseService(DbContextOptions options) : base(options) { }
 
 	public T? FindOne<T>(Expression<Func<T, bool>> exp) where T : class
@@ -49,4 +45,10 @@ public class DatabaseService : DbContext
 
 		return ent;
 	}
+
+	public DbSet<LevelSettings>? LevelSettings { get; set; }
+
+	public DbSet<UserKarma>? UserKarma { get; set; }
+
+	public DbSet<UserLevel>? UserLevel { get; set; }
 }
