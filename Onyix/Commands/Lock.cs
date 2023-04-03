@@ -21,6 +21,9 @@ using System.Threading.Tasks;
 
 namespace Onyix.Commands
 {
+	/// <summary>
+	/// A command module for locking and unlocking channels
+	/// </summary>
 	public class LockCommand : ApplicationCommandModule
 	{
 		[SlashCommand("lock", "Locks or unlocks a channel.", true)]

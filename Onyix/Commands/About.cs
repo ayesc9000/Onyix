@@ -21,8 +21,16 @@ using System.Threading.Tasks;
 
 namespace Onyix.Commands;
 
+/// <summary>
+/// A command module for displaying information about the bot
+/// </summary>
 public class AboutCommand : ApplicationCommandModule
 {
+	/// <summary>
+	/// Reply to an interaction with the about command
+	/// </summary>
+	/// <param name="ctx">The context for this interaction</param>
+	/// <returns>A new asynchronous task</returns>
 	[SlashCommand("about", "Displays information about the bot.", true)]
 	public async Task Execute(InteractionContext ctx)
 	{
