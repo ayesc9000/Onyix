@@ -23,17 +23,28 @@ using System.Threading.Tasks;
 
 namespace Onyix.Services;
 
+/// <summary>
+/// A service to manage starting and logging in the Discord client
+/// </summary>
 public class LogonService
 {
 	private readonly DiscordClient client;
 	private readonly Logger logger;
 
+	/// <summary>
+	/// Create a new instance of the logon service
+	/// </summary>
+	/// <param name="s"></param>
 	public LogonService(IServiceProvider s)
 	{
 		client = s.GetRequiredService<DiscordClient>();
 		logger = s.GetRequiredService<Logger>();
 	}
 
+	/// <summary>
+	/// Start the Discord client and login to the Discord API
+	/// </summary>
+	/// <returns></returns>
 	public async Task StartAsync()
 	{
 		await client.ConnectAsync();

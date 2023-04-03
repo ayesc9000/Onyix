@@ -19,10 +19,20 @@ using System;
 
 namespace Onyix.Exceptions
 {
+	/// <summary>
+	/// Represents errors that occur in database results from a query or operation
+	/// </summary>
 	public class DatabaseResultException : Exception
 	{
+		/// <summary>
+		/// Create a new DatabaseResultException
+		/// </summary>
 		public DatabaseResultException() : base() { }
 
+		/// <summary>
+		/// Create a new DatabaseResultException with an optional message
+		/// </summary>
+		/// <param name="message"></param>
 		public DatabaseResultException(string message) : base(message) { }
 	}
 }
