@@ -1,4 +1,4 @@
-﻿<!--
+<!--
  Onyix - An open-source Discord bot
  Copyright (C) 2023 Liam "AyesC" Hogan
 
@@ -57,7 +57,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
-    <PackageReference Include="NLog" Version="5.1.3" />
+    <PackageReference Include="NLog" Version="5.1.5" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.2.3" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
 	<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1">
