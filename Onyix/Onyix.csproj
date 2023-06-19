@@ -1,4 +1,4 @@
-﻿<!--
+<!--
  Onyix - An open-source Discord bot
  Copyright (C) 2023 Liam "AyesC" Hogan
 
@@ -44,7 +44,7 @@
   <ItemGroup>
     <PackageReference Include="DSharpPlus" Version="4.4.0" />
     <PackageReference Include="DSharpPlus.SlashCommands" Version="4.4.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
